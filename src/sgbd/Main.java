@@ -1,7 +1,9 @@
 package sgbd;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -18,6 +20,16 @@ public class Main
     private static Mistake errores = new Mistake();
     public static void main(String[] args) throws Exception
     {
+        FileOutputStream fos = null;
+        DataOutputStream archivo = null;
+        
+        fos = new FileOutputStream("pd_files/manager_dbs.pd", true);
+        archivo = new DataOutputStream(fos);
+        
+        archivo.writeChars("BD_PONY");
+        
+        archivo.close();
+        /*
         if(args.length == 0)
             System.out.println("Debe ingresar un archivo");
         else
@@ -44,6 +56,7 @@ public class Main
                 }
             }
         }
+        */
     }
     
     public static void ALexico(String file)
