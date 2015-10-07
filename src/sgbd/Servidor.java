@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.net.Socket;
 import java.net.SocketException;
@@ -32,15 +34,13 @@ public class Servidor extends Thread
     @Override
     public void run()
     {
-        InputStream inp = null;
-        BufferedReader brinp = null;
-        DataOutputStream out = null;
+        ObjectInputStream in = null;
+        ObjectOutputStream out = null;
         
         try
         {
-            inp = socket.getInputStream();
-            brinp = new BufferedReader(new InputStreamReader(inp));
-            out = new DataOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
         }
         catch (IOException e)
         {
@@ -53,10 +53,12 @@ public class Servidor extends Thread
         {
             try
             {
-                data = brinp.readLine();
+                System.out.println("hiloooo ");
+                data = in.readUTF();
+                System.out.println("pasee ");
                 String archivo = "";
                 String opcion = "";
-                if ((data == null) || data.equalsIgnoreCase("QUIT"))
+                if (data.isEmpty())
                 {
                     socket.close();
                     return;
@@ -99,7 +101,7 @@ public class Servidor extends Thread
         }
     }
     
-    public void ALexico(String file, DataOutputStream out) throws IOException, SocketException
+    public void ALexico(String file, ObjectOutputStream out) throws IOException, SocketException
     {
         Reader reader = null;
         try
@@ -249,7 +251,7 @@ public class Servidor extends Thread
         }
     }
     
-    public void ASintactico(String file, DataOutputStream out) throws IOException, SocketException
+    public void ASintactico(String file, ObjectOutputStream out) throws IOException, SocketException
     {
         errores = new Mistake();
         message += "ANALIZADOR SINTACTICO\n";
@@ -299,7 +301,7 @@ public class Servidor extends Thread
         }
     }
    
-    public  void ASemantico(String file, DataOutputStream out) throws IOException, SocketException
+    public  void ASemantico(String file, ObjectOutputStream out) throws IOException, SocketException
     {
         errores = new Mistake();
         message += "ANALIZADOR SEMANTICO\n";
