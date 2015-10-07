@@ -4,7 +4,7 @@ package sgbd.lexico;
 
 import java_cup.runtime.*;
 import java.util.ArrayList;
-import lema.analizadorSemantico.Nodo;
+import sgbd.semantico.Nodo;
 import sgbd.Mistake;
 
 

@@ -1,7 +1,6 @@
-package lema.analizadorSemantico;
+package sgbd.semantico;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class Nodo
 {
@@ -95,6 +94,7 @@ public class Nodo
         this.terminal = terminal;
     }
         
+    @Override
     public String toString() 
     {
         return imprimir(this,0,0,-1,this.getValor());

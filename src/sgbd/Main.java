@@ -6,8 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
-import lema.analizadorSemantico.Nodo;
+import sgbd.semantico.Nodo;
 import sgbd.lexico.Lexico;
 import sgbd.lexico.sym;
 import sgbd.sintactico.parser;
@@ -259,12 +261,32 @@ public class Main
    
     public static void ASemantico(String file)
     {
-        /*
-        errores = new Mistake();
         System.out.println("ANALIZADOR SEMANTICO");
         System.out.flush();
         System.out.println("------------------------------------------------------------");
         System.out.flush();
+        
+        try 
+        {
+            parser p = new parser(new Lexico(new FileReader(file), errores), errores);
+            Object result = p.parse();
+            Nodo raiz = p.getRaiz();
+            System.out.println(raiz.toString());
+            
+        }
+        catch(FileNotFoundException ex)
+        {
+            System.out.println("Error: Archivo incorrecto");
+            ex.printStackTrace();
+            System.out.println("Finalizado");
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        /*
+        errores = new Mistake();
+        
         
         try
         {

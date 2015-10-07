@@ -2,10 +2,14 @@ package sgbd.sintactico;
 
 import java.util.ArrayList;
 import sgbd.lexico.sym;
+import sgbd.semantico.Nodo;
+import sgbd.semantico.accion;
 import sgbd.Mistake;
 
 parser code
 {:
+    public Nodo raiz;
+
     /** Variable encargada de guardar errores sintácticos */
     public Mistake e;
 
@@ -52,11 +56,17 @@ parser code
     {
         report_error(message, info);
     }
+
+    public Nodo getRaiz()
+    {
+        return raiz;
+    }
 :};
 
 /* DECLARACION DE TERMINALES */
 
-terminal create, drop, show, use,
+terminal Nodo
+create, drop, show, use,
 
 database, databases, id,
 table, tables,
@@ -75,7 +85,8 @@ numero, numreal, cadena, tr, fa
 
 /* DECLARACION DE NO TERMINALES */
 
-non terminal PROGRAMA, CREACIONBD, 
+non terminal Nodo
+                PROGRAMA, CREACIONBD, 
 			ELIMINACIONBD,
 			MOSTRARBD,
 			USARBD,
@@ -86,10 +97,14 @@ non terminal PROGRAMA, CREACIONBD,
 			ELIMINARREGISTRO,
 			MODIFICARREGISTRO,
 			MOSTRARREGISTRO,
-			ARGUMENTO, ARG, IDS,
-			PARAMETRO, PAR,
+			ARGUMENTO, 
+			PARAMETRO,
                         SENTENCIA, 
 			TIPO, VALUE;
+
+non terminal ArrayList <Nodo>
+                            PAR, IDS, ARG, NSENTENCIA;
+
 
 precedence nonassoc create;
 precedence nonassoc drop;
@@ -125,65 +140,336 @@ precedence nonassoc values;
   
 start with PROGRAMA;
 
-PROGRAMA ::= SENTENCIA;
+PROGRAMA ::= NSENTENCIA:s
+{:
+    System.out.println("HOLA JOVEN");
+    RESULT = new Nodo(accion.START, accion.acciones[accion.START], 0, 0, s, false);
+    raiz = RESULT;
+:};
 
-SENTENCIA  ::= CREACIONBD
-			|ELIMINACIONBD
-			|MOSTRARBD
-			|USARBD
-			|CREARTABLA
-			|ELIMINARTABLA
-			|MOSTRARTABLA
-			|INSERTARREGISTRO
-			|ELIMINARREGISTRO
-			|MODIFICARREGISTRO
-			|MOSTRARREGISTRO
-			|SENTENCIA SENTENCIA;
+NSENTENCIA ::= SENTENCIA:s NSENTENCIA:n 
+{:
+    n.add(0, s);
 
+    RESULT = n;
+:};
+
+NSENTENCIA ::= SENTENCIA:s   
+{:
+    ArrayList <Nodo> n = new ArrayList<Nodo>();
+    n.add(s);
+
+    RESULT = n;
+:};
+
+SENTENCIA  ::= CREACIONBD:cr
+{:
+    RESULT = cr;
+:};
+
+SENTENCIA  ::= ELIMINACIONBD:el
+{:
+    RESULT = el;
+:};
+
+SENTENCIA  ::= MOSTRARBD:mo
+{:
+    RESULT = mo;
+:};
+
+SENTENCIA  ::= USARBD:us
+{:
+    RESULT = us;
+:};
+
+SENTENCIA  ::= CREARTABLA:cr
+{:
+    RESULT = cr;
+:};
+
+SENTENCIA  ::= ELIMINARTABLA:el
+{:
+    RESULT = el;
+:};
+
+SENTENCIA  ::= MOSTRARTABLA:mo
+{:
+    RESULT = mo;
+:};
+
+SENTENCIA  ::= INSERTARREGISTRO:in
+{:
+    RESULT = in;
+:};
+
+SENTENCIA  ::= ELIMINARREGISTRO:el
+{:
+    RESULT = el;
+:};
+
+SENTENCIA  ::= MODIFICARREGISTRO:mo
+{:
+    RESULT = mo;
+:};
+
+SENTENCIA  ::= MOSTRARREGISTRO:mo
+{:
+    RESULT = mo;
+:};
 			
-CREACIONBD ::= create database id fin;
-ELIMINACIONBD ::= drop database id fin;
-MOSTRARBD ::= show databases fin;
-USARBD ::= use database id fin;
+CREACIONBD ::= create database id:i fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
 
-CREARTABLA ::= create table id PARAMETRO fin;
-ELIMINARTABLA ::= drop table id fin;
-MOSTRARTABLA ::= show tables fin;
+    RESULT = new Nodo(accion.CREATE_DATABASE, accion.acciones[accion.CREATE_DATABASE], ileft, iright, hijos, false);
+:};
 
 
-INSERTARREGISTRO ::= insert into id values ARGUMENTO fin;
-ELIMINARREGISTRO ::= delete from id fin
-			| delete from id where id igual VALUE fin;
-MODIFICARREGISTRO ::= update id set id igual VALUE fin
-			| update id set id igual VALUE where id igual VALUE fin;
-MOSTRARREGISTRO ::= select IDS from id fin
-			| select all from id fin 
-                        | select IDS from id where id igual VALUE fin
-			| select all from id where id igual VALUE fin;
-			
-			
-ARGUMENTO ::=  par_ab ARG par_ce;
+ELIMINACIONBD ::= drop database id:i fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
 
-ARG ::= VALUE
-	|VALUE coma ARG;
+    RESULT = new Nodo(accion.DROP_DATABASE, accion.acciones[accion.DROP_DATABASE], ileft, iright, hijos, false);
+:};
 
-IDS ::= id
-	|id coma IDS;
+MOSTRARBD ::= show databases:d fin
+{:
+    RESULT = new Nodo(accion.SHOW_DATABASES, accion.acciones[accion.SHOW_DATABASES], dleft, dright, (new ArrayList<Nodo>()), false);
+:};
+
+USARBD ::= use database id:i fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+
+    RESULT = new Nodo(accion.USE_DATABASE, accion.acciones[accion.USE_DATABASE], ileft, iright, hijos, false);
+:};
+
+CREARTABLA ::= create table id:i PARAMETRO:p fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+    hijos.add(p);
+
+    RESULT = new Nodo(accion.CREATE_TABLE, accion.acciones[accion.CREATE_TABLE], ileft, iright, hijos, false);
+:};
+
+ELIMINARTABLA ::= drop table id:i fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+
+    RESULT = new Nodo(accion.DROP_TABLE, accion.acciones[accion.DROP_TABLE], ileft, iright, hijos, false);
+:};
+
+
+MOSTRARTABLA ::= show tables:t fin
+{:
+    RESULT = new Nodo(accion.SHOW_TABLES, accion.acciones[accion.SHOW_TABLES], tleft, tright, (new ArrayList<Nodo>()), false);
+:};
+
+INSERTARREGISTRO ::= insert into id:i values ARGUMENTO:a fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+    hijos.add(a);
+
+    RESULT = new Nodo(accion.INSERT_REGISTER, accion.acciones[accion.INSERT_REGISTER], ileft, iright, hijos, false);
+:};
+
+ELIMINARREGISTRO ::= delete from id:i1 where id:i2 igual VALUE:v fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i1);
+    hijos.add(i2);
+    hijos.add(v);
+
+    RESULT = new Nodo(accion.DELETE_REGISTER, accion.acciones[accion.DELETE_REGISTER], i1left, i1right, hijos, false);
+:};
+
+MODIFICARREGISTRO ::= update id:i1 set id:i2 igual VALUE:v fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i1);
+    hijos.add(i2);
+    hijos.add(v);
+    hijos.add(new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i1left, i1right, (new ArrayList <Nodo>()), false));
+    RESULT = new Nodo(accion.UPDATE_REGISTER, accion.acciones[accion.UPDATE_REGISTER], i1left, i1right, hijos, false);
+:};
+
+MODIFICARREGISTRO ::= update id:i1 set id:i2 igual VALUE:v1 where id:i3 igual VALUE:v2 fin
+{:
+    ArrayList <Nodo> vA = new ArrayList <>();
+    vA.add(i3);
+    vA.add(v2);
+    Nodo n = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i1left, i1right, vA, false);
+
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i1);
+    hijos.add(i2);
+    hijos.add(v1);
+    hijos.add(n);
+
+    RESULT = new Nodo(accion.UPDATE_REGISTER, accion.acciones[accion.UPDATE_REGISTER], i1left, i1right, hijos, false);
+:};
+
+MOSTRARREGISTRO ::= select IDS:id from id:i fin
+{:
+    Nodo n = new Nodo(accion.IDENTIFIERS, accion.acciones[accion.IDENTIFIERS], ileft, iright, id, false);
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+    hijos.add(n);
+    
+    hijos.add(new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], ileft, iright, (new ArrayList <Nodo>()), false));
+
+    RESULT = new Nodo(accion.SELECT, accion.acciones[accion.SELECT], 0, 0, hijos, false);
+:};
+
+MOSTRARREGISTRO ::= select IDS:id from id:i1 where id:i2 igual VALUE:v fin
+{:
+    ArrayList <Nodo> vA = new ArrayList <>();
+    vA.add(i2);
+    vA.add(v);
+    Nodo n = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i2left, i2right, vA, false);
+    Nodo i = new Nodo(accion.IDENTIFIERS, accion.acciones[accion.IDENTIFIERS], i1left, i1right, id, false);
+
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i1);
+    hijos.add(i);
+    hijos.add(n);
+
+    RESULT = new Nodo(accion.SELECT, accion.acciones[accion.SELECT], 0, 0, hijos, false);
+:};
+
+MOSTRARREGISTRO ::= select all from id:i fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+    hijos.add(new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], ileft, iright, (new ArrayList <Nodo>()), false));
+
+    RESULT = new Nodo(accion.SELECT_ALL, accion.acciones[accion.SELECT_ALL], 0,0, hijos, false);
+:};
+
+MOSTRARREGISTRO ::= select all from id:i1 where id:i2 igual VALUE:v fin
+{:
+    ArrayList <Nodo> vA = new ArrayList <>();
+    vA.add(i2);
+    vA.add(v);
+    Nodo n = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i1left, i1right, vA, false);
+
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i1);
+    hijos.add(n);
+
+    RESULT = new Nodo(accion.SELECT_ALL, accion.acciones[accion.SELECT_ALL], 0,0, hijos, false);
+:};
+
+ARGUMENTO ::=  par_ab ARG:ar par_ce
+{:
+    RESULT = new Nodo(accion.ARGUMENTS, accion.acciones[accion.ARGUMENTS], 0, 0, ar, false);
+:};
+
+ARG ::= VALUE:v
+{:
+    ArrayList <Nodo> n = new ArrayList <>();
+    n.add(v);
+
+    RESULT = n;
+:};
+
+ARG ::= VALUE:v coma ARG:ar
+{:
+    ar.add(0, v);
+
+    RESULT = ar;
+:};
+
+IDS ::= id:i
+{:
+    ArrayList <Nodo> n = new ArrayList <>();
+    n.add(i);
+
+    RESULT = n;
+:};
+
+IDS ::= id:i coma IDS:id
+{:
+    id.add(0, i);
+
+    RESULT = id;    
+:};
 	
-PARAMETRO ::= par_ab PAR par_ce;
-PAR ::= id TIPO
-	|id TIPO coma PAR;
-	
+PARAMETRO ::= par_ab PAR:p par_ce
+{:
+    RESULT = new Nodo(accion.PARAMETERS, accion.acciones[accion.PARAMETERS], 0, 0, p, false);
+:};
+
+PAR ::= id:i TIPO:t
+{:
+    ArrayList <Nodo> n = new ArrayList <> ();
+    n.add(i);
+    n.add(t);
+    Nodo a = new Nodo(accion.PARAMETER, accion.acciones[accion.PARAMETER], ileft, iright, n, false);
+    ArrayList <Nodo> x = new ArrayList <> ();
+    x.add(a);
+    RESULT = x;
+:};
+
+PAR ::= id:i TIPO:t coma PAR:p
+{:
+    ArrayList <Nodo> hijos = new ArrayList <> ();
+    hijos.add(i);
+    hijos.add(t);
+    Nodo sim = new Nodo(accion.PARAMETER, accion.acciones[accion.PARAMETER], ileft, iright, hijos, false);
+
+    p.add(0, sim);
+
+    RESULT = p;
+:};	
 			
-VALUE ::= numero
-			|numreal
-			|cadena
-			|tr
-			|fa;			
+VALUE ::= numero:n
+{:
+    RESULT = n;
+:};
 
-TIPO ::= integer
-		|varchar
-		|real
-		|bool;
+VALUE ::= numreal:r
+{:
+    RESULT = r;
+:};
 
-		
+VALUE ::= cadena:c
+{:
+    RESULT = c;
+:};
+
+VALUE ::= tr:t
+{:
+    RESULT = t;
+:};
+
+VALUE ::= fa:f
+{:
+    RESULT = f;
+:};			
+
+TIPO ::= integer:i
+{:
+    RESULT = i;
+:};
+
+TIPO ::= varchar:v
+{:
+    RESULT = v;
+:};
+
+TIPO ::= real:r
+{:
+    RESULT = r;
+:};
+
+TIPO ::= bool:b
+{:
+    RESULT = b;
+:};

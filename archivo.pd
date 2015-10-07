@@ -23,7 +23,6 @@ SHOW TABLES;
 INSERT INTO nombreTabla VALUES(1.5 , "okay", false);
 
 /* ELIMINACION DE REGISTROS */
-DELETE FROM nombreTabla;
 DELETE FROM nombreTabla WHERE nomAttr = 1.6;
 
 /* MODIFICACION DE REGISTROS */
