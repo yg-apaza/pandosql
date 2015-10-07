@@ -1,14 +1,15 @@
 package sgbd;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
 import sgbd.lexico.Lexico;
@@ -17,79 +18,95 @@ import sgbd.semantico.AST;
 import sgbd.semantico.Nodo;
 import sgbd.sintactico.parser;
 
-public class Servidor
+public class Servidor extends Thread
 {
+    protected Socket socket;
+    private String message = "";
     private static Mistake errores = new Mistake();
-    private ServerSocket servidorSocket;
-    private Socket socket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
     
-    public Servidor()
+    public Servidor(Socket clientSocket)
     {
+        this.socket = clientSocket;
+    }
+
+    @Override
+    public void run()
+    {
+        InputStream inp = null;
+        BufferedReader brinp = null;
+        DataOutputStream out = null;
+        
         try
         {
-            System.out.println("Esperando un cliente PandoSQL ...");
-            servidorSocket = new ServerSocket(6789);
-            socket = servidorSocket.accept();
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
-            System.out.println("Cliente listo ...");
+            inp = socket.getInputStream();
+            brinp = new BufferedReader(new InputStreamReader(inp));
+            out = new DataOutputStream(socket.getOutputStream());
         }
-        catch (IOException ex)
+        catch (IOException e)
         {
-            System.out.println("Error de conexión. Reinicie el servidor.");
+            return;
         }
-    }
-    
-    public void lanzar() throws IOException
-    {
-        while(true)
+        
+        String data;
+        
+        while (true)
         {
-            String data = in.readUTF();
-
-            String archivo = "";
-            String opcion = "";
-
-            if(!data.isEmpty())
+            try
             {
-                archivo = data.substring(0, data.indexOf(" "));
-                opcion = data.substring(data.indexOf(" ") + 1, data.length());
-                if(opcion.isEmpty())
-                    Compilar(archivo);
+                data = brinp.readLine();
+                String archivo = "";
+                String opcion = "";
+                if ((data == null) || data.equalsIgnoreCase("QUIT"))
+                {
+                    socket.close();
+                    return;
+                }
                 else
                 {
-                    out.writeUTF("Archivo: " + archivo + "\n");
-                    out.flush();
-                    switch(Integer.parseInt(opcion))
+                    //Main
+                    archivo = data.substring(0, data.indexOf(" "));
+                    opcion = data.substring(data.indexOf(" ") + 1, data.length());
+                    System.out.println("Archivo: '" + archivo + "'");
+                    System.out.println("Opcion: '" + opcion + "'");
+                    if(opcion.isEmpty())
+                        Compilar(archivo);
+                    else
                     {
-                        case 0:
-                            ALexico(archivo);
-                            break;
-                        case 1:
-                            ASintactico(archivo);
-                            break;
-                        case 2:
-                            ASemantico(archivo);
-                            break;
-                        case 3:
-                            Compilar(archivo);
-                            break;
+                        message += ("Archivo: " + archivo + "\n");
+                        switch(Integer.parseInt(opcion))
+                        {
+                            case 0:
+                                ALexico(archivo, out);
+                                break;
+                            case 1:
+                                ASintactico(archivo, out);
+                                break;
+                            case 2:
+                                ASemantico(archivo, out);
+                                break;
+                            case 3:
+                                //Compilar(archivo);
+                                break;
+                        }
                     }
                 }
+            }
+            catch (IOException e)
+            {
+                System.out.println("Cliente PandoSQL desconectado.");
+                return;
             }
         }
     }
     
-    public void ALexico(String file) throws IOException
+    public void ALexico(String file, DataOutputStream out) throws IOException, SocketException
     {
         Reader reader = null;
         try
         {
             errores = new Mistake();
-            out.writeUTF("ANALIZADOR LEXICO");
-            out.writeUTF("------------------------------------------------------------");
-            out.flush();
+            message += "ANALIZADOR LEXICO\n";
+            message += "------------------------------------------------------------\n";
             
             reader = new BufferedReader(new FileReader(file));
             Lexico lexico;
@@ -204,20 +221,20 @@ public class Servidor
                 token = lexico.next_token();
             }
             
-            out.writeUTF(resultado);
-            out.flush();
+            message += resultado + "\n";
             ArrayList<String> eLexico = errores.getError(0);
             for (String eLexico1 : eLexico)
-            {
-                out.writeUTF(eLexico1);
-                out.flush();
-            }
-            out.writeUTF("\n");
+                message += eLexico1 + "\n";
+
+            message += "\n";
             if(eLexico.isEmpty())
-                out.writeUTF("Finalizado: Análisis Léxico realizado con éxito");
+                message += "Finalizado: Análisis Léxico realizado con éxito\n";
             else
-                out.writeUTF("Finalizado: Se encontraron " + eLexico.size() + " error(es)");
+                message += "Finalizado: Se encontraron " + eLexico.size() + " error(es)\n";
+            
+            out.writeUTF(message);
             out.flush();
+            message = "";
         }
         catch (FileNotFoundException ex)
         {
@@ -232,13 +249,11 @@ public class Servidor
         }
     }
     
-    public void ASintactico(String file) throws IOException
+    public void ASintactico(String file, DataOutputStream out) throws IOException, SocketException
     {
         errores = new Mistake();
-        out.writeUTF("ANALIZADOR SINTACTICO");
-        out.flush();
-        out.writeUTF("------------------------------------------------------------");
-        out.flush();
+        message += "ANALIZADOR SINTACTICO\n";
+        message += "------------------------------------------------------------\n";
         try
         {
             parser p = new parser(new Lexico(new FileReader(file), errores), errores);
@@ -250,47 +265,45 @@ public class Servidor
             if(eLexico.isEmpty())
             {
                 for (String eSintactico1 : eSintactico)
-                {
-                    out.writeUTF(eSintactico1);
-                    out.flush();
-                }
-                out.writeUTF("\n");
+                   message += eSintactico1 + "\n";
+
+                message += "\n";
                 if(eSintactico.isEmpty())
-                    out.writeUTF("Finalizado: Análisis Sintactico realizado con éxito");
+                    message += "Finalizado: Análisis Sintactico realizado con éxito\n";
                 else
-                    out.writeUTF("Finalizado: Se encontraron " + eSintactico.size() + " error(es)");
-                out.flush();
+                    message += "Finalizado: Se encontraron " + eSintactico.size() + " error(es)\n";
             }
             else
             {
-                out.writeUTF("Error Lexico: Se encontraron errores durante el análisis léxico");
-                out.writeUTF("Finalizado");
-                out.flush();
+                message += "Error Lexico: Se encontraron errores durante el análisis léxico\n";
+                message += "Finalizado\n";
             }
+            out.writeUTF(message);
+            out.flush();
         }
         catch (FileNotFoundException ex)
         {
-            out.writeUTF("Error: Archivo incorrecto");
-            out.writeUTF(ex.getMessage());
-            out.writeUTF("Finalizado");
+            message += "Error: Archivo incorrecto\n";
+            message += ex.getMessage() + "\n";
+            message += "Finalizado\n";
+            out.writeUTF(message);
             out.flush();
         }
         catch (Exception ex)
         {
-            out.writeUTF("Error:");
-            out.writeUTF(ex.getMessage());
-            out.writeUTF("Finalizado");
+            message += "Error:\n";
+            message += ex.getMessage() + "\n";
+            message += "Finalizado\n";
+            out.writeUTF(message);
             out.flush();
         }
     }
    
-    public  void ASemantico(String file) throws IOException
+    public  void ASemantico(String file, DataOutputStream out) throws IOException, SocketException
     {
         errores = new Mistake();
-        out.writeUTF("ANALIZADOR SEMANTICO");
-        out.flush();
-        out.writeUTF("------------------------------------------------------------");
-        out.flush();
+        message += "ANALIZADOR SEMANTICO\n";
+        message += "------------------------------------------------------------\n";
         
         try
         {
@@ -310,49 +323,45 @@ public class Servidor
                     ArrayList<String> eSemantico = errores.getError(2);
                     ArrayList<String> wSemantico = errores.getError(3);
                     for (String eSemantico1 : eSemantico)
-                    {
-                        out.writeUTF(eSemantico1);
-                        out.flush();
-                    }
-                    for (String w : wSemantico)
-                    {
-                        out.writeUTF(w);
-                        out.flush();
-                    }
-                    if(eSemantico.isEmpty())
-                        out.writeUTF("Finalizado: Análisis Semántico realizado con éxito");
-                    else
-                        out.writeUTF("Finalizado: Se encontraron " + eSemantico.size() + " error(es)");
+                        message += eSemantico1 + "\n";
                     
-                    out.writeUTF(ast.toString());
-                    out.flush();
+                    for (String w : wSemantico)
+                        message += w + "\n";
+
+                    if(eSemantico.isEmpty())
+                        message += "Finalizado: Análisis Semántico realizado con éxito\n";
+                    else
+                        message += "Finalizado: Se encontraron " + eSemantico.size() + " error(es)\n";
+                    message += ast.toString();
                 }
                 else
                 {
-                    out.writeUTF("Error Sintactico: Se encontraron errores durante el análisis sintáctico");
-                    out.writeUTF("Finalizado");
-                    out.flush();
+                    message += "Error Sintactico: Se encontraron errores durante el análisis sintáctico\n";
+                    message += "Finalizado\n";
                 }
             }
             else
             {
-                out.writeUTF("Error Lexico: Se encontraron errores durante el análisis léxico");
-                out.writeUTF("Finalizado");
-                out.flush();
+                message += "Error Lexico: Se encontraron errores durante el análisis léxico\n";
+                message += "Finalizado\n";
             }
+            out.writeUTF(message);
+            out.flush();
         }
         catch (FileNotFoundException ex)
         {
-            out.writeUTF("Error: Archivo incorrecto");
-            out.writeUTF(ex.getMessage());
-            out.writeUTF("Finalizado");
+            message += "Error: Archivo incorrecto\n";
+            message += ex.getMessage() + "\n";
+            message += "Finalizado\n";
+            out.writeUTF(message);
             out.flush();
         }
         catch (Exception ex)
         {
-            out.writeUTF("Error:");
-            out.writeUTF(ex.getMessage());
-            out.writeUTF("Finalizado");
+            message += "Error:\n";
+            message += ex.getMessage() + "\n";
+            message += "Finalizado\n";
+            out.writeUTF(message);
             out.flush();
         }
     }
