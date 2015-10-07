@@ -4,26 +4,24 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Util
 {
     public static boolean existeBD(String bd)
     {
-        FileInputStream fich = null;
-        DataInputStream entrada = null;
+        ObjectInputStream archivo = null;
         try
         {
-            String bdSearch = null;
             String n;
             int i = 0;
             
-            fich = new FileInputStream("pd_files/manager_dbs.pd");
-            entrada = new DataInputStream(fich);
+            archivo = new ObjectInputStream(new FileInputStream("pd_files/manager_dbs.pd"));
             
-            while(entrada.read()!=-1)
+            while(null != (n = (String) archivo.readObject()))
             {
-                n = entrada.readLine();
-                  
                 if(n.equals(bd))
                     return true;
             }
@@ -33,7 +31,7 @@ public class Util
         {
             ex.printStackTrace();
         }
-        catch (IOException ex)
+        catch (IOException | ClassNotFoundException ex)
         {
             ex.printStackTrace();
         }

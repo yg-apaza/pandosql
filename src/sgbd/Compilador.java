@@ -1,6 +1,7 @@
 package sgbd;
 
 import sgbd.semantico.AST;
+import sgbd.semantico.ManejadorArchivos;
 import sgbd.semantico.Nodo;
 import sgbd.semantico.accion;
 
@@ -29,7 +30,7 @@ public class Compilador
                 break;
                     
                 case accion.CREATE_DATABASE:
-                    
+                    ManejadorArchivos.crearBD(nodo.getHijos().get(0).getValor());
                 break;
             }
             for(int i = 0; i < nodo.getHijos().size(); i++)
