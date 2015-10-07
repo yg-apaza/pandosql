@@ -1,6 +1,7 @@
 package sgbd.semantico;
 
-public class accion {
+public class accion
+{
     public static final int SENTENCES = 0;
     
     public static final int CREATE_DATABASE = 1;
@@ -30,23 +31,23 @@ public class accion {
     public static final String[] acciones = new String[]
     {
         "SENTENCIAS SQL",
-        "CREAR BASE DE DATOS",    
+        "CREAR BASE DE DATOS",
         "ELIMINAR BASE DE DATOS",
         "UTILIZAR BASE DE DATOS",
-        "MOSTRAR BASES DE DATOS",        
+        "MOSTRAR BASES DE DATOS",
         "CREAR TABLA",
         "ELIMINAR TABLA",
         "ELIMINAR REGISTROS DE TABLA",
-        "MOSTRAR TABLAS",                
+        "MOSTRAR TABLAS",
         "INSERTAR REGISTRO",
         "ELIMINAR REGISTRO",
-        "ACTUALIZAR REGISTRO",		
+        "ACTUALIZAR REGISTRO",
         "OBTENER DATOS",
-        "SELECCIONAR TODO",       
+        "SELECCIONAR TODO",
         "PARAMETROS DE TABLA",
         "ARGUMENTOS PARA ENTRADA",
         "IDENTIFICADORES",
-        "PARAMETRO",       
+        "PARAMETRO",
         "CONDICION DE ASIGNACION"
     };
 }

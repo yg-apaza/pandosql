@@ -33,7 +33,10 @@ public class AST
             switch(nodo.getCodigo())
             {
                 case accion.USE_DATABASE:
-                    
+                    if(Util.existeBD(nodo.getHijos().get(0).getValor()))
+                        System.out.println("Cajuai");
+                    else
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
             }
             

@@ -21,36 +21,7 @@ public class Mistake
     public static final int ERROR_SINTACTICO = 0;
     
     /* Errores del Análisis Semántico */
-    public static final int ID_DECLARADO = 0;
-    public static final int NO_TAMANIO_CERO = 1;
-    public static final int DATOS_DISTINTOS = 2;
-    public static final int MATRIZ_NO_FILA = 3;
-    public static final int SOLO_MATRIZ = 4;        
-    public static final int NO_PROTOTIPO = 5;
-    public static final int RETORNO_NO_COINCIDE = 6;
-    public static final int ARGUMENTO_NUM_NO_COINCIDE = 7;
-    public static final int ARGUMENTO_NO_MATRIZ = 8;
-    public static final int ARGUMENTO_NO_COINCIDE = 9;
-    public static final int ARGUMENTO_MATRIZ = 10;
-    public static final int TIPO_NO_COMPATIBLE = 11;
-    public static final int FUNCION_NO_EXISTE = 12;
-    public static final int INDICE_NO_ENTERO = 13;
-    public static final int ID_NO_MATRIZ = 14;    
-    public static final int ELEMENTO_NO_CORRECTO = 15;
-    public static final int ID_NO_DECLARADO = 16;
-    public static final int FUNCION_NO_DEFINIDA = 17;
-    public static final int NO_VARIABLE = 18;
-    public static final int FILA_NO_CORRECTO = 19;
-    public static final int ARGUMENTO_INDICE = 20;
-    public static final int ACCESO_NO_COMPATIBLE = 21;
-    public static final int INDICE_CONSTANTE = 22;
-    public static final int CONSTANTE_NO_MODIFICAR = 23;
-    public static final int CONDICION_NO_COMPATIBLE = 24;
-    public static final int VARIABLE_NO_FUNCION = 25;
-    public static final int TIPO_NO_FUNCION = 26;
-    public static final int NO_RETORNO_FUNCION = 27;
-    public static final int RETORNO_NO_COMPATIBLE = 28;
-    public static final int SALTAR_FUERA = 29;
+    public static final int BD_NO_EXISTE = 0;
     
     /* Warnings */
     public static final int NUM_ELEMENTOS_INCORRECTOS = 0;
@@ -69,36 +40,7 @@ public class Mistake
     
     private final String [] listaSemantico =
     {
-        "Error Semántico: Identificador '$' ya se encuentra declarado. Lin: $ Col: $",
-        "Error Semántico: No se puede inicializar matrices/vectores con tamaño 0. Lin: $ Col $",
-        "Error Semántico: Datos introducidos en la matriz/vector $ distintos. Lin: $ Col $",
-        "Error Semántico: La matriz/vector '$' no debe poseer 1 fila. Lin: $ Col: $",
-        "Error Semántico: Solo se permite matrices/vectores unidimensionales o bidimensionales. Lin: $ Col: $",        
-        "Error Semántico: No hay un prototipo declarado para la función '$'. Lin: $ Col: $",
-        "Error Semántico: Tipo de dato de retorno de la función '$' no coincide con su prototipo. Lin $ Col: $",
-        "Error Semántico: Número de argumentos de la función '$' no coincide con su prototipo. Lin: $ Col: $",
-        "Error Semántico: Argumento $ de la función '$' debe ser una matriz/vector. Lin: $ Col:$",
-        "Error Semántico: Argumento $ de la función '$' no coincide con el prototipo. Lin: $ Col: $",
-        "Error Semántico: Argumento $ de la función '$' no debe ser una matriz/vector. Lin: $ Col: $",
-        "Error Semántico: Tipo de dato asignado a la variable '$' no es compatible. Lin: $ Col: $",
-        "Error Semántico: La función '$' no existe. Lin: $ Col: $",
-        "Error Semántico: Índice $ de la matriz/vector '$' no es un número. Lin: $ Col: $",
-        "Error Semántico: El identificador '$' no es una matriz/vector. Lin: $ Col: $",
-        "Error Semántico: Elemento $ de la matriz/vector no es correcto. Lin: $ Col: $",
-        "Error Semántico: Identificador '$' no declarado. Lin: $ Col: $",
-        "Error Semántico: La función '$' no está definida. Lin: $ Col: $",
-        "Error Semántico: Variable '$' no puede ser asignado a una constante. Lin: $ Col: $",
-        "Error Semántico: Fila $ de la matriz/vector no es correcto. Lin: $ Col: $",
-        "Error Semántico: Uno de los índices del argumento $ de la función '$' debe ser un número. Lin: $ Col: $",
-        "Error Semántico: Tipo de dato asignado al acceso en la matriz '$' no es compatible",
-        "Error Semántico: Indices de la matriz constante '$' deben ser números. Lin: $ Col: $",
-        "Error Semántico: Tipo de dato constante '$' no puede ser modificado. Lin: $ Col: $",
-        "Error Semántico: Tipo de dato condicional no es compatible. Lin: $ Col: $",
-        "Error Semántico: Variable '$' no es compatible con la función '$'. Lin: $ Col: $",
-        "Error Semántico: Tipo de dato no es compatible con la función '$'. Lin: $ Col: $ ",
-        "Error Semántico: Función '$' no tiene una sentencia de retorno correcta. Lin: $ Col: $",
-        "Error Semántico: Tipo de dato de retorno no compatible. Lin: $ Col: $",
-        "Error Semántico: Sentencia 'saltar' fuera de 'while' o 'for'. Lin: $ Col: $"
+        "Error Semántico: Base de datos '$' no existe. Lin: $ Col: $"
     };
     
     private final String[] listaWarnings =

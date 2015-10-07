@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 public class Nodo
 {
-    
-
-    
     private int              codigo;
     private String           valor;
     private int              linea;
