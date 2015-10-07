@@ -143,7 +143,7 @@ start with PROGRAMA;
 PROGRAMA ::= NSENTENCIA:s
 {:
     System.out.println("HOLA JOVEN");
-    RESULT = new Nodo(accion.START, accion.acciones[accion.START], 0, 0, s, false);
+    RESULT = new Nodo(accion.SENTENCES, accion.acciones[accion.SENTENCES], 0, 0, s, false);
     raiz = RESULT;
 :};
 
@@ -409,8 +409,8 @@ PARAMETRO ::= par_ab PAR:p par_ce
 PAR ::= id:i TIPO:t
 {:
     ArrayList <Nodo> n = new ArrayList <> ();
-    n.add(i);
     n.add(t);
+    n.add(i);
     Nodo a = new Nodo(accion.PARAMETER, accion.acciones[accion.PARAMETER], ileft, iright, n, false);
     ArrayList <Nodo> x = new ArrayList <> ();
     x.add(a);
@@ -420,8 +420,8 @@ PAR ::= id:i TIPO:t
 PAR ::= id:i TIPO:t coma PAR:p
 {:
     ArrayList <Nodo> hijos = new ArrayList <> ();
-    hijos.add(i);
     hijos.add(t);
+    hijos.add(i);
     Nodo sim = new Nodo(accion.PARAMETER, accion.acciones[accion.PARAMETER], ileft, iright, hijos, false);
 
     p.add(0, sim);

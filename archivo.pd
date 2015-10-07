@@ -1,36 +1,36 @@
 /*CREACION DE BASE DE DATOS*/
-CREATE DATABASE nombre;
+CREATE DATABASE nombre_de_BD;
 
 /*ELIMINACION DE BASE DE DATOS*/
-DROP DATABASE nombre;
+DROP DATABASE nombre_de_BD;
 
 /*MOSTRAR BASES DE DATOS*/
 SHOW DATABASES;
 
 /*USAR BASE DE DATOS*/
-USE DATABASE nombre;
+USE DATABASE nombre_de_BD;
 
 /*CREACION DE TABLAS*/
-CREATE TABLE nombre(nomAttr1 INTEGER, nomAttr2 INTEGER);
+CREATE TABLE nombre_de_tabla(nomAttr1 INTEGER, nomAttr2 INTEGER);
 
 /*ELIMINACION DE TABLAS*/
-DROP TABLE nombre;
+DROP TABLE nombre_de_tabla;
 
 /*MOSTRAR TABLAS*/
 SHOW TABLES;
 
 /* INSERCION DE REGISTROS */
-INSERT INTO nombreTabla VALUES(1.5 , "okay", false);
+INSERT INTO nombre_de_tabla VALUES(1.5 , "okay", false);
 
 /* ELIMINACION DE REGISTROS */
-DELETE FROM nombreTabla WHERE nomAttr = 1.6;
+DELETE FROM nombre_de_tabla WHERE nomAttr = 1.6;
 
 /* MODIFICACION DE REGISTROS */
-UPDATE nombreTabla SET nomAttr = true;
-UPDATE nombreTabla SET nomAttr = 4 WHERE nomAttr1 = 3;
+UPDATE nombre_de_tabla SET nomAttr = true;
+UPDATE nombre_de_tabla SET nomAttr = 4 WHERE nomAttr1 = 3;
 
 /*MOSTRAR DE REGISTROS */
-SELECT nomAttr, nomAttr FROM nombreTabla;
-SELECT * FROM nombreTabla;
-SELECT nomAttr, nomAttr FROM nombreTabla WHERE ID = 0.6;
-SELECT * FROM nombreTabla WHERE ID = 5;
+SELECT atributo_1, atributo_2 FROM nombre_de_tabla;
+SELECT * FROM nombre_de_tabla;
+SELECT atributo_1, atributo_2 FROM nombre_de_tabla WHERE ID = 0.6;
+SELECT * FROM nombre_de_tabla WHERE ID = 5;

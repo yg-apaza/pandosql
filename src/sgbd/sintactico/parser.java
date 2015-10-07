@@ -340,7 +340,7 @@ class CUP$parser$actions {
 		ArrayList<Nodo> s = (ArrayList<Nodo>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     System.out.println("HOLA JOVEN");
-    RESULT = new Nodo(accion.START, accion.acciones[accion.START], 0, 0, s, false);
+    RESULT = new Nodo(accion.SENTENCES, accion.acciones[accion.SENTENCES], 0, 0, s, false);
     raiz = RESULT;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PROGRAMA",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -979,8 +979,8 @@ class CUP$parser$actions {
 		Nodo t = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     ArrayList <Nodo> n = new ArrayList <> ();
-    n.add(i);
     n.add(t);
+    n.add(i);
     Nodo a = new Nodo(accion.PARAMETER, accion.acciones[accion.PARAMETER], ileft, iright, n, false);
     ArrayList <Nodo> x = new ArrayList <> ();
     x.add(a);
@@ -1005,8 +1005,8 @@ class CUP$parser$actions {
 		ArrayList<Nodo> p = (ArrayList<Nodo>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     ArrayList <Nodo> hijos = new ArrayList <> ();
-    hijos.add(i);
     hijos.add(t);
+    hijos.add(i);
     Nodo sim = new Nodo(accion.PARAMETER, accion.acciones[accion.PARAMETER], ileft, iright, hijos, false);
 
     p.add(0, sim);
