@@ -142,7 +142,6 @@ start with PROGRAMA;
 
 PROGRAMA ::= NSENTENCIA:s
 {:
-    System.out.println("HOLA JOVEN");
     RESULT = new Nodo(accion.SENTENCES, accion.acciones[accion.SENTENCES], 0, 0, s, false);
     raiz = RESULT;
 :};

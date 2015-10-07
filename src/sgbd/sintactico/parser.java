@@ -342,7 +342,7 @@ class CUP$parser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		ArrayList<Nodo> s = (ArrayList<Nodo>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    System.out.println("HOLA JOVEN");
+    
     RESULT = new Nodo(accion.SENTENCES, accion.acciones[accion.SENTENCES], 0, 0, s, false);
     raiz = RESULT;
 
