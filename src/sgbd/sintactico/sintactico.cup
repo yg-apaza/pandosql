@@ -264,6 +264,13 @@ ELIMINARTABLA ::= drop table id:i fin
     RESULT = new Nodo(accion.DROP_TABLE, accion.acciones[accion.DROP_TABLE], ileft, iright, hijos, false);
 :};
 
+ELIMINARTABLA ::= delete from id:i fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+
+    RESULT = new Nodo(accion.DELETE_TABLE, accion.acciones[accion.DELETE_TABLE], ileft, iright, hijos, false);
+:};
 
 MOSTRARTABLA ::= show tables:t fin
 {:

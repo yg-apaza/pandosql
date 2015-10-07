@@ -15,6 +15,7 @@ CREATE TABLE nombre_de_tabla(nomAttr1 INTEGER, nomAttr2 INTEGER);
 
 /*ELIMINACION DE TABLAS*/
 DROP TABLE nombre_de_tabla;
+DELETE FROM nombre_de_tabla;
 
 /*MOSTRAR TABLAS*/
 SHOW TABLES;
