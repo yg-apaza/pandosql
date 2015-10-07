@@ -22,6 +22,8 @@ public class Mistake
     
     /* Errores del Análisis Semántico */
     public static final int BD_NO_EXISTE = 0;
+    public static final int BD_NO_SELECCIONADA = 1;
+    public static final int TABLA_NO_EXISTE = 2;
     
     /* Warnings */
     public static final int NUM_ELEMENTOS_INCORRECTOS = 0;
@@ -40,7 +42,9 @@ public class Mistake
     
     private final String [] listaSemantico =
     {
-        "Error Semántico: Base de datos '$' no existe. Lin: $ Col: $"
+        "Error Semántico: Base de datos '$' no existe. Lin: $ Col: $",
+        "Error Semántico: No se ha seleccionado ninguna base de datos. Lin: $ Col: $",
+        "Error Semántico: Tabla '$' no existe en la base de datos '$'. Lin: $ Col: $",
     };
     
     private final String[] listaWarnings =

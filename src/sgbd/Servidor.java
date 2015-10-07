@@ -22,6 +22,8 @@ public class Servidor extends Thread
     protected Socket socket;
     private String message = "";
     private static Mistake errores = new Mistake();
+    public static String actualBD = null;
+    
     
     public Servidor(Socket clientSocket)
     {
@@ -63,7 +65,7 @@ public class Servidor extends Thread
                     archivo = data.substring(0, data.indexOf(" "));
                     opcion = data.substring(data.indexOf(" ") + 1, data.length());
                     if(opcion.isEmpty())
-                        Compilar(archivo);
+                        Compilar(archivo, out);
                     else
                     {
                         message += ("Archivo: " + archivo + "\n\n");
@@ -79,7 +81,7 @@ public class Servidor extends Thread
                                 ASemantico(archivo, out);
                                 break;
                             case 3:
-                                //Compilar(archivo);
+                                Compilar(archivo, out);
                                 break;
                         }
                     }
@@ -100,7 +102,7 @@ public class Servidor extends Thread
         {
             errores = new Mistake();
             message += "ANALIZADOR LEXICO\n";
-            message += "------------------------------------------------------------\n";
+            message += "-----------------------------------------------------------------------------\n";
             
             reader = new BufferedReader(new FileReader(file));
             Lexico lexico;
@@ -247,7 +249,7 @@ public class Servidor extends Thread
     {
         errores = new Mistake();
         message += "ANALIZADOR SINTACTICO\n";
-        message += "------------------------------------------------------------\n";
+        message += "-----------------------------------------------------------------------------\n";
         try
         {
             parser p = new parser(new Lexico(new FileReader(file), errores), errores);
@@ -297,7 +299,7 @@ public class Servidor extends Thread
     {
         errores = new Mistake();
         message += "ANALIZADOR SEMANTICO\n";
-        message += "------------------------------------------------------------\n";
+        message += "-----------------------------------------------------------------------------\n";
         
         try
         {
@@ -360,14 +362,11 @@ public class Servidor extends Thread
         }
     }
    
-    public static void Compilar(String file)
+    public void Compilar(String file, ObjectOutputStream out) throws IOException, SocketException
     {
-        /*
         errores = new Mistake();
-        System.out.println("COMPILACIÓN");
-        System.out.flush();
-        System.out.println("------------------------------------------------------------");
-        System.out.flush();
+        message += "COMPILACIÓN\n";
+        message += "-----------------------------------------------------------------------------\n";
         
         try
         {
@@ -388,54 +387,47 @@ public class Servidor extends Thread
                     if(eSemantico.isEmpty())
                     {
                         /* COMPILADOR */
-        /*
-                        String nombre = (file.substring(0, (file.indexOf(".") > -1)?file.indexOf("."):file.length()));                        
-                        Compilador comp = new Compilador(ast, nombre);
+                        Compilador comp = new Compilador(ast);
                         comp.compilar();
-                        System.out.println("AST - CODIGO INTERMEDIO");
-                        System.out.println(ast);
                     }
                     else
                     {
                         for (String eSemantico1 : eSemantico)
-                        {
-                            System.out.println(eSemantico1);
-                            System.out.flush();
-                        }
-                        System.out.println("Finalizado: Se encontraron " + eSemantico.size() + " error(es) semánticos");
+                            message += eSemantico1 + "\n";
+                        message += "Finalizado: Se encontraron " + eSemantico.size() + " error(es) semánticos\n";
                     }
                 }
                 else
                 {
                     for (String eSintactico1 : eSintactico)
-                    {
-                        System.out.println(eSintactico1);
-                        System.out.flush();
-                    }
-                    System.out.println("Finalizado: Se encontraron " + eSintactico.size() + " error(es) sintácticos");
+                        message += eSintactico1 + "\n";
+                    message += "Finalizado: Se encontraron " + eSintactico.size() + " error(es) sintácticos\n";
                 }
             }
             else
             {
                 for (String eLexico1 : eLexico)
-                {
-                    System.out.println(eLexico1);
-                    System.out.flush();
-                }
-                System.out.println("Finalizado: Se encontraron " + eLexico.size() + " error(es) léxicos");
+                    message += eLexico1 + "\n";
+                message += "Finalizado: Se encontraron " + eLexico.size() + " error(es) léxicos\n";
             }
+            out.writeUTF(message);
+            out.flush();
         }
         catch (FileNotFoundException ex)
         {
-            System.out.println("Error: Archivo incorrecto");
-            ex.printStackTrace();
-            System.out.println("Finalizado");
+            message += "Error: Archivo incorrecto\n";
+            message += ex.getMessage() + "\n";
+            message += "Finalizado\n";
+            out.writeUTF(message);
+            out.flush();
         }
         catch (Exception ex)
         {
-            System.out.println("Error:");
-            ex.printStackTrace();
-            System.out.println("Finalizado");
-        }*/
+            message += "Error:\n";
+            message += ex.getMessage() + "\n";
+            message += "Finalizado\n";
+            out.writeUTF(message);
+            out.flush();
+        }
     }
 }

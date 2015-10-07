@@ -1,6 +1,7 @@
 package sgbd.semantico;
 
 import sgbd.Mistake;
+import sgbd.Servidor;
 
 public class AST
 {
@@ -33,10 +34,25 @@ public class AST
             switch(nodo.getCodigo())
             {
                 case accion.USE_DATABASE:
-                    if(Util.existeBD(nodo.getHijos().get(0).getValor()))
-                        System.out.println("Cajuai");
-                    else
+                    if(!Util.existeBD(nodo.getHijos().get(0).getValor()))
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                break;
+                    
+                case accion.DROP_DATABASE:
+                    if(!Util.existeBD(nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                break;
+                    
+                case accion.CREATE_TABLE:
+                    if(Servidor.actualBD == null)
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                break;
+                    
+                case accion.DROP_TABLE:
+                    if(Servidor.actualBD == null)
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeTabla(Servidor.actualBD, nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), Servidor.actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
             }
             
