@@ -53,9 +53,7 @@ public class Servidor extends Thread
         {
             try
             {
-                System.out.println("hiloooo ");
                 data = in.readUTF();
-                System.out.println("pasee ");
                 String archivo = "";
                 String opcion = "";
                 if (data.isEmpty())
@@ -65,11 +63,8 @@ public class Servidor extends Thread
                 }
                 else
                 {
-                    //Main
                     archivo = data.substring(0, data.indexOf(" "));
                     opcion = data.substring(data.indexOf(" ") + 1, data.length());
-                    System.out.println("Archivo: '" + archivo + "'");
-                    System.out.println("Opcion: '" + opcion + "'");
                     if(opcion.isEmpty())
                         Compilar(archivo);
                     else
