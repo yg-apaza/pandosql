@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class Main
 {
-    static final int PORT = 6789;
+    private static final int PORT = 6789;
 
     public static void main(String args[])
     {

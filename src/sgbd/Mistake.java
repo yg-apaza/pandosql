@@ -7,28 +7,22 @@ public class Mistake
     private final ArrayList<String> errorLexico;
     private final ArrayList<String> errorSintactico;
     private final ArrayList<String> errorSemantico;
-    private final ArrayList<String> warnings;
     
-    /* Errores Generales */
+    /** Identificador de errores */
     public static final int LEXICO = 0;
     public static final int SINTACTICO = 1;
     public static final int SEMANTICO = 2;
     
-    /* Errores del Análisis Léxico */
+    /** Errores del Análisis Léxico */
     public static final int TOKEN_INVALIDO = 0;
     
-    /* Errores del Análisis Sintáctico */
+    /** Errores del Análisis Sintáctico */
     public static final int ERROR_SINTACTICO = 0;
     
-    /* Errores del Análisis Semántico */
+    /** Errores del Análisis Semántico */
     public static final int BD_NO_EXISTE = 0;
     public static final int BD_NO_SELECCIONADA = 1;
     public static final int TABLA_NO_EXISTE = 2;
-    
-    /* Warnings */
-    public static final int NUM_ELEMENTOS_INCORRECTOS = 0;
-    public static final int FILAS_NO_COINCIDE = 1;
-    public static final int COLUMNAS_INCORRECTAS = 2;
     
     private final String [] listaLexico =
     {
@@ -59,7 +53,6 @@ public class Mistake
         errorLexico     = new ArrayList <>();
         errorSintactico = new ArrayList <>();
         errorSemantico  = new ArrayList <>();
-        warnings        = new ArrayList <>();
     }
     
     public void insertarError(int tipo, int codigo, String[] datos)
@@ -79,12 +72,7 @@ public class Mistake
             break;
         }
     }
-    
-    public void insertarWarning(int codigo, String[] datos)
-    {
-        warnings.add(unir(listaWarnings[codigo], datos));
-    }
-    
+        
     public String unir(String error, String[] datos)
     {
         int index = -1;
@@ -108,8 +96,6 @@ public class Mistake
                 return errorSintactico;
             case 2:
                 return errorSemantico;
-            case 3:
-                return warnings;
         }
         return (new ArrayList <>());
     }    
