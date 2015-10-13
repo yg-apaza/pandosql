@@ -372,7 +372,7 @@ public class Servidor extends Thread
     public void Compilar(String linea, ObjectOutputStream out, String actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
-        
+        errores.clear();
         try
         {
             parser p = new parser(new Lexico(new StringReader(linea), errores), errores);

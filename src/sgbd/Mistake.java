@@ -45,13 +45,6 @@ public class Mistake
         "Error Semántico: Tabla '$' ya existe en la base de datos '$'. Lin: $ Col: $",
     };
     
-    private final String[] listaWarnings =
-    {
-        "Warning Semántico: Número de elementos introducidos a la matriz/vector '$' incorrecto. Lin: $ Col: $",
-        "Warning Semántico: Número de filas de la matriz/vector '$' no coincide con las inicializadas. Lin: $ Col: $",
-        "Warning Semántico: Número de columnas de la fila $ de la matriz/vector '$' incorrecto. Lin: $ Col: $"
-    };
-    
     public Mistake()
     {
         errorLexico     = new ArrayList <>();
@@ -102,5 +95,12 @@ public class Mistake
                 return errorSemantico;
         }
         return (new ArrayList <>());
-    }    
+    }
+    
+    public void clear()
+    {
+        this.errorLexico.clear();
+        this.errorSintactico.clear();
+        this.errorSemantico.clear();
+    }
 }
