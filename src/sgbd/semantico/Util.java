@@ -33,4 +33,9 @@ public class Util
     {
         return false;
     }
+    
+    public static boolean existeCampo(String bd, String tabla, String campo)
+    {
+        return false;
+    }
 }

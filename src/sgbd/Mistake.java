@@ -23,6 +23,8 @@ public class Mistake
     public static final int BD_NO_EXISTE = 0;
     public static final int BD_NO_SELECCIONADA = 1;
     public static final int TABLA_NO_EXISTE = 2;
+    public static final int BD_EXISTE = 3;
+    public static final int TABLA_EXISTE = 4;
     
     private final String [] listaLexico =
     {
@@ -39,6 +41,8 @@ public class Mistake
         "Error Semántico: Base de datos '$' no existe. Lin: $ Col: $",
         "Error Semántico: No se ha seleccionado ninguna base de datos. Lin: $ Col: $",
         "Error Semántico: Tabla '$' no existe en la base de datos '$'. Lin: $ Col: $",
+        "Error Semántico: La base de datos '$' ya existe. Lin: $ Col: $",
+        "Error Semántico: Tabla '$' ya existe en la base de datos '$'. Lin: $ Col: $",
     };
     
     private final String[] listaWarnings =

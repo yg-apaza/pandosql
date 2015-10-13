@@ -46,6 +46,8 @@ public class AST
                 case accion.CREATE_TABLE:
                     if(Servidor.actualBD == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(Util.existeTabla(Servidor.actualBD, nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), Servidor.actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
                     
                 case accion.DROP_TABLE:
