@@ -77,7 +77,7 @@ into, from, where,
 integer, varchar, real, bool,
 all, fin, par_ab, par_ce, igual, coma,
 
-values,
+values, and, or,
 
 numero, numreal, cadena, tr, fa
 ;

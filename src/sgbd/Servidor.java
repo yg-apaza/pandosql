@@ -417,14 +417,6 @@ public class Servidor extends Thread
             out.writeUTF(message);
             out.flush();
         }
-        catch (FileNotFoundException ex)
-        {
-            message += "Error: Archivo incorrecto\n";
-            message += ex.getMessage() + "\n";
-            message += "Finalizado\n";
-            out.writeUTF(message);
-            out.flush();
-        }
         catch (Exception ex)
         {
             message += "Error:\n";

@@ -8,41 +8,43 @@ package sgbd.lexico;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int tr = 33;
-  public static final int par_ab = 25;
-  public static final int insert = 11;
-  public static final int cadena = 32;
-  public static final int numreal = 31;
-  public static final int values = 29;
-  public static final int all = 23;
-  public static final int coma = 28;
-  public static final int numero = 30;
-  public static final int drop = 3;
-  public static final int tables = 10;
-  public static final int update = 13;
-  public static final int where = 18;
-  public static final int create = 2;
   public static final int bool = 22;
-  public static final int set = 15;
-  public static final int database = 6;
-  public static final int igual = 27;
-  public static final int real = 21;
-  public static final int EOF = 0;
-  public static final int into = 16;
-  public static final int id = 8;
-  public static final int select = 14;
-  public static final int fa = 34;
-  public static final int par_ce = 26;
-  public static final int from = 17;
-  public static final int error = 1;
-  public static final int use = 5;
-  public static final int integer = 19;
-  public static final int fin = 24;
-  public static final int delete = 12;
-  public static final int table = 9;
   public static final int databases = 7;
-  public static final int varchar = 20;
+  public static final int numreal = 33;
+  public static final int where = 18;
+  public static final int insert = 11;
+  public static final int coma = 28;
+  public static final int igual = 27;
+  public static final int create = 2;
+  public static final int from = 17;
+  public static final int real = 21;
+  public static final int into = 16;
+  public static final int par_ab = 25;
+  public static final int all = 23;
+  public static final int table = 9;
+  public static final int numero = 32;
+  public static final int drop = 3;
+  public static final int EOF = 0;
+  public static final int set = 15;
+  public static final int error = 1;
+  public static final int or = 31;
+  public static final int update = 13;
+  public static final int integer = 19;
+  public static final int par_ce = 26;
+  public static final int id = 8;
+  public static final int fa = 36;
   public static final int show = 4;
+  public static final int delete = 12;
+  public static final int fin = 24;
+  public static final int database = 6;
+  public static final int and = 30;
+  public static final int select = 14;
+  public static final int use = 5;
+  public static final int tables = 10;
+  public static final int varchar = 20;
+  public static final int tr = 35;
+  public static final int values = 29;
+  public static final int cadena = 34;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -74,6 +76,8 @@ public class sym {
   "igual",
   "coma",
   "values",
+  "and",
+  "or",
   "numero",
   "numreal",
   "cadena",
