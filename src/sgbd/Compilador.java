@@ -8,10 +8,12 @@ import sgbd.semantico.accion;
 public class Compilador
 {
     private AST arbol;
+    private String actualBD;
     
-    public Compilador(AST arbol)
+    public Compilador(AST arbol, String actualBD)
     {
         this.arbol = arbol;
+        this.actualBD = actualBD;
     }
     
     public void compilar()
@@ -26,7 +28,7 @@ public class Compilador
             switch(nodo.getCodigo())
             {
                 case accion.USE_DATABASE:
-                    Servidor.actualBD = nodo.getHijos().get(0).getValor();
+                    actualBD = nodo.getHijos().get(0).getValor();
                 break;
                     
                 case accion.CREATE_DATABASE:

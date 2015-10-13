@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -22,8 +23,6 @@ public class Servidor extends Thread
     protected Socket socket;
     private String message = "";
     private static Mistake errores = new Mistake();
-    public static String actualBD = null;
-    
     
     public Servidor(Socket clientSocket)
     {
@@ -43,25 +42,32 @@ public class Servidor extends Thread
         }
         catch (IOException e)
         {
+            System.out.println("Servidor PandoSQL no pudo iniciar.");
             return;
         }
         
         String data;
+        String actualBD = null;
         
         while (true)
         {
             try
             {
                 data = in.readUTF();
+                /*
                 String archivo = "";
                 String opcion = "";
+                */
                 if (data.isEmpty())
                 {
                     socket.close();
+                    System.out.println("No se pudo establecer comunicación con el servidor PandoSQL.");
                     return;
                 }
                 else
                 {
+                    Compilar(data, out, actualBD);
+                    /*
                     archivo = data.substring(0, data.indexOf(" "));
                     opcion = data.substring(data.indexOf(" ") + 1, data.length());
                     if(opcion.isEmpty())
@@ -85,6 +91,7 @@ public class Servidor extends Thread
                                 break;
                         }
                     }
+                    */
                 }
             }
             catch (IOException e)
@@ -295,7 +302,7 @@ public class Servidor extends Thread
         }
     }
    
-    public  void ASemantico(String file, ObjectOutputStream out) throws IOException, SocketException
+    public  void ASemantico(String file, ObjectOutputStream out, String actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
         message += "ANALIZADOR SEMANTICO\n";
@@ -312,7 +319,7 @@ public class Servidor extends Thread
                 if(eSintactico.isEmpty())
                 {
                     Nodo raiz = p.getRaiz();
-                    AST ast = new AST(raiz, errores);
+                    AST ast = new AST(raiz, errores, actualBD);
                     
                     ast.verificar();
                     
@@ -362,15 +369,13 @@ public class Servidor extends Thread
         }
     }
    
-    public void Compilar(String file, ObjectOutputStream out) throws IOException, SocketException
+    public void Compilar(String linea, ObjectOutputStream out, String actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
-        message += "COMPILACIÓN\n";
-        message += "-----------------------------------------------------------------------------\n";
         
         try
         {
-            parser p = new parser(new Lexico(new FileReader(file), errores), errores);
+            parser p = new parser(new Lexico(new StringReader(linea), errores), errores);
             Object result = p.parse();
             ArrayList<String> eLexico = errores.getError(0);
             ArrayList<String> eSintactico = errores.getError(1);
@@ -379,15 +384,14 @@ public class Servidor extends Thread
                 if(eSintactico.isEmpty())
                 {
                     Nodo raiz = p.getRaiz();
-                    AST ast = new AST(raiz, errores);
-                    
+                    AST ast = new AST(raiz, errores, actualBD);
                     ast.verificar();
                     ArrayList<String> eSemantico = errores.getError(2);
                     ArrayList<String> wSemantico = errores.getError(3);
                     if(eSemantico.isEmpty())
                     {
                         /* COMPILADOR */
-                        Compilador comp = new Compilador(ast);
+                        Compilador comp = new Compilador(ast, actualBD);
                         comp.compilar();
                     }
                     else
