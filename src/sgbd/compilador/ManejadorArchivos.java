@@ -24,6 +24,5 @@ public class ManejadorArchivos
         {
             ex.printStackTrace();
         }
-            
     }
 }
