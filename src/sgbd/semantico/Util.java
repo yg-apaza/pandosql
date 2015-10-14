@@ -5,7 +5,6 @@ import sgbd.compilador.Tabla;
 
 public class Util
 {
-    private Tabla tables    = Tabla.cargar("manager_tables.pd");
     public static boolean existeBD(String bd)
     {
         return Tabla.seleccion(Tabla.cargar("manager_dbs.pd"), "nombreBD", bd).numFilas() != 0;

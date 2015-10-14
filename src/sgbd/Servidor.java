@@ -55,10 +55,6 @@ public class Servidor extends Thread
             try
             {
                 data = in.readUTF();
-                /*
-                String archivo = "";
-                String opcion = "";
-                */
                 if (data.isEmpty())
                 {
                     socket.close();
