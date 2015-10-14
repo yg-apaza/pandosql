@@ -127,7 +127,7 @@ public class Tabla implements Serializable
         return null;
     }
     
-    public static Tabla proyeccion(ArrayList<String> columnas)
+    public static Tabla proyeccion(Tabla t, ArrayList<String> columnas)
     {
         return null;
     }

@@ -69,32 +69,6 @@ public class Servidor extends Thread
                 {
                     ASemantico(data, out, actualBD);
                     //Compilar(data, out, actualBD);
-                    
-                    /*
-                    archivo = data.substring(0, data.indexOf(" "));
-                    opcion = data.substring(data.indexOf(" ") + 1, data.length());
-                    if(opcion.isEmpty())
-                        Compilar(archivo, out);
-                    else
-                    {
-                        message += ("Archivo: " + archivo + "\n\n");
-                        switch(Integer.parseInt(opcion))
-                        {
-                            case 0:
-                                ALexico(archivo, out);
-                                break;
-                            case 1:
-                                ASintactico(archivo, out);
-                                break;
-                            case 2:
-                                ASemantico(archivo, out);
-                                break;
-                            case 3:
-                                Compilar(archivo, out);
-                                break;
-                        }
-                    }
-                    */
                 }
             }
             catch (IOException e)
@@ -317,7 +291,7 @@ public class Servidor extends Thread
         try
         {
             parser p = new parser(new Lexico(new StringReader(linea), errores), errores);
-            Object result = p.parse();
+            p.parse();
             ArrayList<String> eLexico = errores.getError(0);
             ArrayList<String> eSintactico = errores.getError(1);
             if(eLexico.isEmpty())
@@ -330,13 +304,9 @@ public class Servidor extends Thread
                     ast.verificar();
                     
                     ArrayList<String> eSemantico = errores.getError(2);
-                    ArrayList<String> wSemantico = errores.getError(3);
                     for (String eSemantico1 : eSemantico)
                         message += eSemantico1 + "\n";
                     
-                    for (String w : wSemantico)
-                        message += w + "\n";
-
                     if(eSemantico.isEmpty())
                         message += "Finalizado: Análisis Semántico realizado con éxito\n";
                     else

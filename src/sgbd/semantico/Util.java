@@ -1,41 +1,44 @@
 package sgbd.semantico;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import sgbd.compilador.Tabla;
 
 public class Util
 {
+    private Tabla tables    = Tabla.cargar("manager_tables.pd");
     public static boolean existeBD(String bd)
     {
-        ObjectInputStream archivo = null;
-        try
-        {
-            String n;
-            archivo = new ObjectInputStream(new FileInputStream("pd_files/manager_dbs.pd"));
-            while(null != (n = (String) archivo.readObject()))
-                if(n.equals(bd))
-                    return true;
-        }
-        catch (FileNotFoundException ex)
-        {
-            ex.printStackTrace();
-        }
-        catch (IOException | ClassNotFoundException ex)
-        {
-            ex.printStackTrace();
-        }
-        return false;
+        return Tabla.seleccion(Tabla.cargar("manager_dbs.pd"), "nombreBD", bd).numFilas() != 0;
     }
     
+    /**
+     * Se asume que la BD existe
+     * @param bd
+     * @param tabla
+     * @return 
+     */
     public static boolean existeTabla(String bd, String tabla)
     {
-        return false;
+        return Tabla.interseccion(  Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreBD", bd),
+                                    Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreTB", tabla)).numFilas() != 0;
     }
     
+    /**
+     * Se asume que la tabla y la BD existen
+     * @param bd
+     * @param tabla
+     * @param campo
+     * @return 
+     */
     public static boolean existeCampo(String bd, String tabla, String campo)
     {
-        return false;
+        ArrayList<String> f = new ArrayList<>();
+        f.add("archivo");
+        String tabla_file = (String)Tabla.proyeccion(
+                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreBD", bd),
+                                                            Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreTB", tabla)),
+                                        f
+        ).getFilas().get(0).get(0);
+        return Tabla.cargar(tabla_file).getColumnas().indexOf(campo) >= 0;
     }
 }
