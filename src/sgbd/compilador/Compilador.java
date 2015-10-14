@@ -1,4 +1,4 @@
-package sgbd;
+package sgbd.compilador;
 
 import sgbd.semantico.AST;
 import sgbd.semantico.Nodo;

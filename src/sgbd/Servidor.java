@@ -1,5 +1,6 @@
 package sgbd;
 
+import sgbd.compilador.Compilador;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

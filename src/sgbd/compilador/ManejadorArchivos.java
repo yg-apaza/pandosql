@@ -1,4 +1,4 @@
-package sgbd;
+package sgbd.compilador;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

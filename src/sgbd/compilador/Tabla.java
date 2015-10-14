@@ -1,7 +1,14 @@
-package sgbd;
+package sgbd.compilador;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Tabla implements Serializable
 {
@@ -68,14 +75,40 @@ public class Tabla implements Serializable
         return filas.size();
     }
     
-    public static void guardar(Tabla t)
+    public static void guardar(Tabla t, String file)
     {
-        
+        ObjectOutputStream archivo = null;
+        try
+        {
+            archivo = new ObjectOutputStream(new FileOutputStream("pd_files/" + file, false));
+            archivo.writeObject(t);
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
     }
     
-    public static Tabla cargar(String bd, String nombre)
+    public static Tabla cargar(String bd, String nombre, String file)
     {
-        return null;
+        Tabla t = new Tabla();
+        ObjectInputStream archivo = null;
+        
+        try
+        {
+            archivo = new ObjectInputStream(new FileInputStream("pd_files/" + file));
+            t = (Tabla) archivo.readObject();
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+        catch (ClassNotFoundException ex)
+        {
+            ex.printStackTrace();
+        }
+        
+        return t;
     }
     
     public static Tabla interseccion(Tabla t1, Tabla t2)
@@ -98,8 +131,14 @@ public class Tabla implements Serializable
         return null;
     }
     
-    private static int getTipo(String columna)
+    private static int getTipo(Tabla t, String columna)
     {
-        return 0;
+        return t.getTipos().get(t.getColumnas().indexOf(columna));
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "";
     }
 }
