@@ -66,7 +66,9 @@ public class Servidor extends Thread
                 }
                 else
                 {
-                    Compilar(data, out, actualBD);
+                    ASemantico(data, out, actualBD);
+                    //Compilar(data, out, actualBD);
+                    
                     /*
                     archivo = data.substring(0, data.indexOf(" "));
                     opcion = data.substring(data.indexOf(" ") + 1, data.length());
@@ -252,14 +254,14 @@ public class Servidor extends Thread
         }
     }
     
-    public void ASintactico(String file, ObjectOutputStream out) throws IOException, SocketException
+    public void ASintactico(String linea, ObjectOutputStream out) throws IOException, SocketException
     {
         errores = new Mistake();
         message += "ANALIZADOR SINTACTICO\n";
         message += "-----------------------------------------------------------------------------\n";
         try
         {
-            parser p = new parser(new Lexico(new FileReader(file), errores), errores);
+            parser p = new parser(new Lexico(new StringReader(linea), errores), errores);
             Object result = p.parse();
 
             ArrayList<String> eLexico = errores.getError(0);
@@ -302,7 +304,7 @@ public class Servidor extends Thread
         }
     }
    
-    public  void ASemantico(String file, ObjectOutputStream out, String actualBD) throws IOException, SocketException
+    public  void ASemantico(String linea, ObjectOutputStream out, String actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
         message += "ANALIZADOR SEMANTICO\n";
@@ -310,7 +312,7 @@ public class Servidor extends Thread
         
         try
         {
-            parser p = new parser(new Lexico(new FileReader(file), errores), errores);
+            parser p = new parser(new Lexico(new StringReader(linea), errores), errores);
             Object result = p.parse();
             ArrayList<String> eLexico = errores.getError(0);
             ArrayList<String> eSintactico = errores.getError(1);

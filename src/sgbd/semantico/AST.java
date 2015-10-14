@@ -1,7 +1,6 @@
 package sgbd.semantico;
 
 import sgbd.Mistake;
-import sgbd.Servidor;
 
 public class AST
 {
