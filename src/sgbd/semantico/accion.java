@@ -27,6 +27,9 @@ public class accion
     public static final int PARAMETER = 17;
     
     public static final int CONDITION = 18;
+    public static final int FILTER = 19;
+    public static final int AND = 20;
+    public static final int OR = 21;
     
     public static final String[] acciones = new String[]
     {
@@ -48,6 +51,9 @@ public class accion
         "ARGUMENTOS PARA ENTRADA",
         "IDENTIFICADORES",
         "PARAMETRO",
-        "CONDICION DE ASIGNACION"
+        "CONDICION",
+        "FILTRO",
+        "AND",
+        "OR"            
     };
 }
