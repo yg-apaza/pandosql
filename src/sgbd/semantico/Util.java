@@ -72,7 +72,7 @@ public class Util
         ).getFilas().get(0).get(0);
         
         Tabla aux = Tabla.cargar(tabla_file);
-        return aux.getTipos().get(Tabla.getIndiceColumna(aux, campo)) == t;
+        int ind = Tabla.getIndiceColumna(aux, campo);
+        return ind >= 0?aux.getTipos().get(ind) == t:false;
     }
-    
 }
