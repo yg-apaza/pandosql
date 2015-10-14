@@ -1,4 +1,4 @@
-package sgbd.semantico;
+package sgbd;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

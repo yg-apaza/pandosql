@@ -5,6 +5,13 @@ import java.util.ArrayList;
 
 public class Tabla implements Serializable
 {
+    /**
+     * Tipo
+     * 0: INTEGER
+     * 1: DOUBLE
+     * 2: VARCHAR
+     * 3: BOOLEAN
+     */
     private ArrayList<Integer> tipos;
     private ArrayList<String> columnas;
     private ArrayList<ArrayList<Object>> filas;
@@ -59,5 +66,40 @@ public class Tabla implements Serializable
     public int numFilas()
     {
         return filas.size();
+    }
+    
+    public static void guardar(Tabla t)
+    {
+        
+    }
+    
+    public static Tabla cargar(String bd, String nombre)
+    {
+        return null;
+    }
+    
+    public static Tabla interseccion(Tabla t1, Tabla t2)
+    {
+        return null;
+    }
+    
+    public static Tabla union(Tabla t1, Tabla t2)
+    {
+        return null;
+    }
+    
+    public static Tabla proyeccion(ArrayList<String> columnas)
+    {
+        return null;
+    }
+    
+    public static Tabla seleccion(String columna, Object data)
+    {
+        return null;
+    }
+    
+    private static int getTipo(String columna)
+    {
+        return 0;
     }
 }

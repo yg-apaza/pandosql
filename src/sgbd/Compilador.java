@@ -1,7 +1,6 @@
 package sgbd;
 
 import sgbd.semantico.AST;
-import sgbd.semantico.ManejadorArchivos;
 import sgbd.semantico.Nodo;
 import sgbd.semantico.accion;
 

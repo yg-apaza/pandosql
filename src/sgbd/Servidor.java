@@ -110,6 +110,7 @@ public class Servidor extends Thread
         try
         {
             errores = new Mistake();
+            message = "";
             message += "ANALIZADOR LEXICO\n";
             message += "-----------------------------------------------------------------------------\n";
             
@@ -257,6 +258,7 @@ public class Servidor extends Thread
     public void ASintactico(String linea, ObjectOutputStream out) throws IOException, SocketException
     {
         errores = new Mistake();
+        message = "";
         message += "ANALIZADOR SINTACTICO\n";
         message += "-----------------------------------------------------------------------------\n";
         try
@@ -307,6 +309,7 @@ public class Servidor extends Thread
     public  void ASemantico(String linea, ObjectOutputStream out, String actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
+        message = "";
         message += "ANALIZADOR SEMANTICO\n";
         message += "-----------------------------------------------------------------------------\n";
         
@@ -374,7 +377,7 @@ public class Servidor extends Thread
     public void Compilar(String linea, ObjectOutputStream out, String actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
-        errores.clear();
+        message = "";
         try
         {
             parser p = new parser(new Lexico(new StringReader(linea), errores), errores);
