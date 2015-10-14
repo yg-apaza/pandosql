@@ -100,10 +100,11 @@ non terminal Nodo
 			ARGUMENTO, 
 			PARAMETRO,
                         SENTENCIA, 
-			TIPO, VALUE;
+			TIPO, VALUE,
+                        FILTRO,OPERACION;
 
 non terminal ArrayList <Nodo>
-                            PAR, IDS, ARG, NSENTENCIA;
+                            PAR, IDS, ARG;
 
 
 precedence nonassoc create;
@@ -135,30 +136,17 @@ precedence nonassoc igual;
 precedence nonassoc coma;
 precedence nonassoc values;
 
+precedence left and;
+precedence left or;
 
 /* PRECEDENCIA */
   
 start with PROGRAMA;
 
-PROGRAMA ::= NSENTENCIA:s
+PROGRAMA ::= SENTENCIA:s
 {:
-    RESULT = new Nodo(accion.SENTENCES, accion.acciones[accion.SENTENCES], 0, 0, s, false);
+    RESULT = s;
     raiz = RESULT;
-:};
-
-NSENTENCIA ::= SENTENCIA:s NSENTENCIA:n 
-{:
-    n.add(0, s);
-
-    RESULT = n;
-:};
-
-NSENTENCIA ::= SENTENCIA:s   
-{:
-    ArrayList <Nodo> n = new ArrayList<Nodo>();
-    n.add(s);
-
-    RESULT = n;
 :};
 
 SENTENCIA  ::= CREACIONBD:cr
@@ -238,7 +226,7 @@ MOSTRARBD ::= show databases:d fin
     RESULT = new Nodo(accion.SHOW_DATABASES, accion.acciones[accion.SHOW_DATABASES], dleft, dright, (new ArrayList<Nodo>()), false);
 :};
 
-USARBD ::= use database id:i fin
+USARBD ::= use id:i fin
 {:
     ArrayList <Nodo> hijos = new ArrayList <>();
     hijos.add(i);
@@ -301,7 +289,22 @@ MODIFICARREGISTRO ::= update id:i1 set id:i2 igual VALUE:v fin
     hijos.add(i1);
     hijos.add(i2);
     hijos.add(v);
-    hijos.add(new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i1left, i1right, (new ArrayList <Nodo>()), false));
+    hijos.add(new Nodo(accion.FILTER, accion.acciones[accion.FILTER], i1left, i1right, (new ArrayList <Nodo>()), false));
+    RESULT = new Nodo(accion.UPDATE_REGISTER, accion.acciones[accion.UPDATE_REGISTER], i1left, i1right, hijos, false);
+:};
+
+MODIFICARREGISTRO ::= update id:i1 set id:i2 igual VALUE:v where FILTRO:f fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i1);
+    hijos.add(i2);
+    hijos.add(v);
+    
+    ArrayList <Nodo> fl = new ArrayList <>();
+    fl.add(f);
+    Nodo n = new Nodo(accion.FILTER, accion.acciones[accion.FILTER], i2left, i2right, fl, false);
+    hijos.add(n);
+
     RESULT = new Nodo(accion.UPDATE_REGISTER, accion.acciones[accion.UPDATE_REGISTER], i1left, i1right, hijos, false);
 :};
 
@@ -310,7 +313,11 @@ MODIFICARREGISTRO ::= update id:i1 set id:i2 igual VALUE:v1 where id:i3 igual VA
     ArrayList <Nodo> vA = new ArrayList <>();
     vA.add(i3);
     vA.add(v2);
-    Nodo n = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i1left, i1right, vA, false);
+    Nodo f = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i3left, i3right, vA, false);
+
+    ArrayList <Nodo> fl = new ArrayList <>();
+    fl.add(f);
+    Nodo n = new Nodo(accion.FILTER, accion.acciones[accion.FILTER], i2left, i2right, fl, false);
 
     ArrayList <Nodo> hijos = new ArrayList <>();
     hijos.add(i1);
@@ -328,7 +335,22 @@ MOSTRARREGISTRO ::= select IDS:id from id:i fin
     hijos.add(i);
     hijos.add(n);
     
-    hijos.add(new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], ileft, iright, (new ArrayList <Nodo>()), false));
+    hijos.add(new Nodo(accion.FILTER, accion.acciones[accion.FILTER], ileft, iright, (new ArrayList <Nodo>()), false));
+
+    RESULT = new Nodo(accion.SELECT, accion.acciones[accion.SELECT], 0, 0, hijos, false);
+:};
+
+MOSTRARREGISTRO ::= select IDS:id from id:i where FILTRO:f fin
+{:
+    Nodo ids = new Nodo(accion.IDENTIFIERS, accion.acciones[accion.IDENTIFIERS], ileft, iright, id, false);
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+    hijos.add(ids);
+    
+    ArrayList <Nodo> fl = new ArrayList <>();
+    fl.add(f);
+    Nodo n = new Nodo(accion.FILTER, accion.acciones[accion.FILTER], ileft, iright, fl, false);
+    hijos.add(n);
 
     RESULT = new Nodo(accion.SELECT, accion.acciones[accion.SELECT], 0, 0, hijos, false);
 :};
@@ -338,7 +360,11 @@ MOSTRARREGISTRO ::= select IDS:id from id:i1 where id:i2 igual VALUE:v fin
     ArrayList <Nodo> vA = new ArrayList <>();
     vA.add(i2);
     vA.add(v);
-    Nodo n = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i2left, i2right, vA, false);
+    Nodo f = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i2left, i2right, vA, false);
+
+    ArrayList <Nodo> fl = new ArrayList <>();
+    fl.add(f);
+    Nodo n = new Nodo(accion.FILTER, accion.acciones[accion.FILTER], i2left, i2right, fl, false);
     Nodo i = new Nodo(accion.IDENTIFIERS, accion.acciones[accion.IDENTIFIERS], i1left, i1right, id, false);
 
     ArrayList <Nodo> hijos = new ArrayList <>();
@@ -353,7 +379,20 @@ MOSTRARREGISTRO ::= select all from id:i fin
 {:
     ArrayList <Nodo> hijos = new ArrayList <>();
     hijos.add(i);
-    hijos.add(new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], ileft, iright, (new ArrayList <Nodo>()), false));
+    hijos.add(new Nodo(accion.FILTER, accion.acciones[accion.FILTER], ileft, iright, (new ArrayList <Nodo>()), false));
+
+    RESULT = new Nodo(accion.SELECT_ALL, accion.acciones[accion.SELECT_ALL], 0,0, hijos, false);
+:};
+
+MOSTRARREGISTRO ::= select all from id:i where FILTRO:f fin
+{:
+    ArrayList <Nodo> hijos = new ArrayList <>();
+    hijos.add(i);
+
+    ArrayList <Nodo> fl = new ArrayList <>();
+    fl.add(f);
+    Nodo n = new Nodo(accion.FILTER, accion.acciones[accion.FILTER], ileft, iright, fl, false);
+    hijos.add(n);
 
     RESULT = new Nodo(accion.SELECT_ALL, accion.acciones[accion.SELECT_ALL], 0,0, hijos, false);
 :};
@@ -363,7 +402,11 @@ MOSTRARREGISTRO ::= select all from id:i1 where id:i2 igual VALUE:v fin
     ArrayList <Nodo> vA = new ArrayList <>();
     vA.add(i2);
     vA.add(v);
-    Nodo n = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i1left, i1right, vA, false);
+    Nodo f = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], i2left, i2right, vA, false);
+
+    ArrayList <Nodo> fl = new ArrayList <>();
+    fl.add(f);
+    Nodo n = new Nodo(accion.FILTER, accion.acciones[accion.FILTER], i2left, i2right, fl, false);
 
     ArrayList <Nodo> hijos = new ArrayList <>();
     hijos.add(i1);
@@ -376,6 +419,52 @@ ARGUMENTO ::=  par_ab ARG:ar par_ce
 {:
     RESULT = new Nodo(accion.ARGUMENTS, accion.acciones[accion.ARGUMENTS], 0, 0, ar, false);
 :};
+
+FILTRO ::= id:i igual VALUE:v
+{:
+    ArrayList <Nodo> f = new ArrayList <>();
+    f.add(i);
+    f.add(v);
+    Nodo n = new Nodo(accion.CONDITION, accion.acciones[accion.CONDITION], ileft, iright, f, false);
+
+    RESULT = n;
+:};
+
+FILTRO ::= par_ab FILTRO:f par_ce:e
+{:
+    f.setColumna(eright+1);
+    RESULT = f;
+:};
+
+FILTRO ::= par_ab OPERACION:o par_ce:f
+{:
+    o.setColumna(fright+1);
+    RESULT = o;
+:};
+
+FILTRO ::= OPERACION:o
+{:
+    RESULT = o;
+:};
+
+OPERACION ::= FILTRO:f1 and FILTRO:f2
+{:
+    ArrayList <Nodo> o = new ArrayList <>();
+    o.add(f1);
+    o.add(f2);
+
+    RESULT = new Nodo(accion.AND, accion.acciones[accion.AND], f2left, f2right, o, false);
+:};
+
+OPERACION ::= FILTRO:f1 or FILTRO:f2
+{:
+    ArrayList <Nodo> o = new ArrayList <>();
+    o.add(f1);
+    o.add(f2);
+
+    RESULT = new Nodo(accion.OR, accion.acciones[accion.OR], f2left, f2right, o, false);
+:};
+
 
 ARG ::= VALUE:v
 {:
