@@ -23,7 +23,7 @@ USE DATABASE nombre_de_BD;
 /* INSERCION DE REGISTROS */
 //INSERT INTO nombre_de_tabla VALUES(1.5 , "okay", false);
 
-/* ELIMINACION DE REGISTROS */
+/* ELIMINACION DE REGISTROS no filtro, solo 1*/
 //DELETE FROM nombre_de_tabla WHERE nomAttr = 1.6;
 
 /* MODIFICACION DE REGISTROS */

@@ -297,7 +297,7 @@ public class Servidor extends Thread
                     Nodo raiz = p.getRaiz();
                     AST ast = new AST(raiz, errores, actualBD);
                     
-                    ast.verificar();
+                    //ast.verificar();
                     
                     ArrayList<String> eSemantico = errores.getError(2);
                     for (String eSemantico1 : eSemantico)

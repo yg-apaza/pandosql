@@ -148,7 +148,7 @@ public class Tabla implements Serializable
         return t.getTipos().get(t.getColumnas().indexOf(columna));
     }
     
-    private static int getIndiceColumna(Tabla t, String columna)
+    public static int getIndiceColumna(Tabla t, String columna)
     {
         return t.getColumnas().indexOf(columna);
     }

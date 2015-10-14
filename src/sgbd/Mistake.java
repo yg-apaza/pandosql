@@ -25,24 +25,30 @@ public class Mistake
     public static final int TABLA_NO_EXISTE = 2;
     public static final int BD_EXISTE = 3;
     public static final int TABLA_EXISTE = 4;
+    public static final int ARGUMENTOS_NO_COINCIDEN = 5;
+    public static final int CAMPO_NO_EXISTE = 6;
+    public static final int ARGUMENTO_NO_COINCIDE = 7;
     
     private final String [] listaLexico =
     {
-        "Error Lexico: Token '$' no reconocido. Lin: $ Col: $"
+        "Error: Token '$' no reconocido. Lin: $ Col: $"
     };
     
     private final String [] listaSintactico =
     {
-        "Error Sintactico: $. Lin: $ Col: $"
+        "Error: $. Lin: $ Col: $"
     };
     
     private final String [] listaSemantico =
     {
-        "Error Semántico: Base de datos '$' no existe. Lin: $ Col: $",
-        "Error Semántico: No se ha seleccionado ninguna base de datos. Lin: $ Col: $",
-        "Error Semántico: Tabla '$' no existe en la base de datos '$'. Lin: $ Col: $",
-        "Error Semántico: La base de datos '$' ya existe. Lin: $ Col: $",
-        "Error Semántico: Tabla '$' ya existe en la base de datos '$'. Lin: $ Col: $",
+        "Error: Base de datos '$' no existe. Lin: $ Col: $",
+        "Error: No se ha seleccionado ninguna base de datos. Lin: $ Col: $",
+        "Error: Tabla '$' no existe en la base de datos '$'. Lin: $ Col: $",
+        "Error: La base de datos '$' ya existe. Lin: $ Col: $",
+        "Error: Tabla '$' ya existe en la base de datos '$'. Lin: $ Col: $",
+        "Error: Argumentos no coinciden con los de la tabla '$'. Lin: $ Col: $",
+        "Error: Campo '$' no existe en la tabla '$'. Lin: $ Col: $",
+        "Error: Argumento '$' no coincide con el campo '$'. Lin: $ Col: $"
     };
     
     public Mistake()
