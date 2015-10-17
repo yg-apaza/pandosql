@@ -119,28 +119,90 @@ public class Tabla implements Serializable
     
     public static Tabla interseccion(Tabla t1, Tabla t2)
     {
-        return null;
+        /* Suponiendo que los tienen las mismas columnas, es decir el número de columnas y los mismos tipos */
+       
+        Tabla resultado = new Tabla();
+        resultado.setColumnas(t1.columnas);
+        resultado.setTipos(t1.tipos);
+              
+        t1.filas.stream().forEach((aux) -> {
+            t2.filas.stream().filter((fila) -> (aux.equals(fila))).forEach((_item) -> {
+                resultado.getFilas().add(aux);
+            });
+        });
+        
+        return resultado;
     }
     
     public static Tabla union(Tabla t1, Tabla t2)
     {
-        return null;
+        Tabla resultado = new Tabla();
+        resultado.setColumnas(t1.columnas);
+        resultado.setTipos(t1.tipos);
+              
+        t1.filas.stream().forEach((fila) -> {
+            resultado.filas.add(fila);
+        });
+        
+        t2.filas.stream().filter((fila) -> (!resultado.filas.contains(fila))).forEach((fila) -> {
+            resultado.filas.add(fila);
+        });
+        
+        return resultado;
     }
     
     public static Tabla proyeccion(Tabla t, ArrayList<String> columnas)
     {
-        return null;
+        Tabla resultado = new Tabla();
+        resultado.setColumnas(columnas);
+        
+        ArrayList <Integer> indices = new ArrayList <>();
+        
+        columnas.stream().map((columna) -> t.columnas.indexOf(columna)).map((indice) -> {
+            resultado.tipos.add(t.tipos.get(indice));
+            return indice;
+        }).forEach((indice) -> {
+            indices.add(indice);
+        });
+        
+        t.filas.stream().map((fila) -> {
+            ArrayList <Object> nuevo = new ArrayList <>();
+            indices.stream().forEach((indice) -> {
+                nuevo.add(fila.get(indice));
+            });
+            return nuevo;
+        }).forEach((nuevo) -> {
+            resultado.filas.add(nuevo);
+        });
+        
+        return resultado;
     }
     
     public static Tabla seleccion(Tabla t, String columna, Object data)
     {
-        Tabla t2 = t;
-        ArrayList<ArrayList<Object>> datos = new ArrayList<>();
-        for(int i = 0; i < t.numFilas(); i++)
-            if(t.getFilas().get(i).get(getIndiceColumna(t, columna)).equals(data))
-                datos.add(t.getFilas().get(i));
-        t2.setFilas(datos);
-        return t2;
+        /*
+            Implementación Yuliana
+            Tabla t2 = t;
+            ArrayList<ArrayList<Object>> datos = new ArrayList<>();
+            for(int i = 0; i < t.numFilas(); i++)
+                if(t.getFilas().get(i).get(getIndiceColumna(t, columna)).equals(data))
+                    datos.add(t.getFilas().get(i));
+            t2.setFilas(datos);
+            return t2; 
+        */
+        
+        /* Implementación Kevin */
+        Tabla resultado = new Tabla();
+        resultado.setColumnas(t.columnas);
+        resultado.setTipos(t.tipos);
+        
+        int indice = t.columnas.indexOf(columna);
+                
+        t.filas.stream().filter((fila) -> (fila.get(indice).equals(data))).forEach((fila) -> {
+            resultado.filas.add(fila);
+        });
+                
+        return resultado;
     }
     
     private static int getTipo(Tabla t, String columna)
@@ -156,6 +218,20 @@ public class Tabla implements Serializable
     @Override
     public String toString()
     {
-        return "";
+        /*Bajo muchas conidicones coprobadas antes*/
+        
+        String resultado = "";
+        for(int i = 0;i < columnas.size();i++) {
+            resultado += columnas.get(i) + " (" + tipos.get(i) + "),\t"; 
+        }
+        
+        resultado += "\n";
+        
+        for (ArrayList<Object> aux : filas) {
+            resultado = aux.stream().map((aux1) -> aux1 + "\t\t").reduce(resultado, String::concat);
+            resultado += "\n";
+        }
+
+        return resultado;
     }
 }
