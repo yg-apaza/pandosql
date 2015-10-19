@@ -146,6 +146,38 @@ public class Compilador
                                                         o1
                                                     );
                 break;
+                
+                case accion.SELECT:
+                    ArrayList<String> col = new ArrayList<>();
+                    for(int i = 0; i < nodo.getHijos().get(1).getHijos().size(); i++)
+                        col.add(nodo.getHijos().get(1).getHijos().get(i).getValor());
+                    
+                    if(nodo.getHijos().get(2).getHijos().isEmpty())
+                        message += Tabla.proyeccion(ManejadorArchivos.selectAll(actualBD.get(), nodo.getHijos().get(0).getValor()), col);
+                    else if(nodo.getHijos().get(2).getHijos().size() == 1)
+                    {
+                        n1 = nodo.getHijos().get(2).getHijos().get(0).getHijos().get(1);
+                        switch(n1.getCodigo())
+                        {
+                            case sym.numero:
+                                o1 = Integer.valueOf(n1.getValor());
+                            break;
+                            case sym.numreal:
+                                o1 = Double.valueOf(n1.getValor());
+                            break;
+                            case sym.cadena:
+                                o1 = n1.getValor().substring(1, n1.getValor().length() - 1);
+                            break;
+                            case sym.tr:
+                            case sym.fa:
+                                o1 = Boolean.valueOf(n1.getValor());
+                            break;
+                        }
+                        message += Tabla.proyeccion(ManejadorArchivos.ejecutarOperacion(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(2).getHijos().get(0).getHijos().get(0).getValor(), o1), col);
+                    }
+                    else
+                        message += Tabla.proyeccion(resolver(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(2).getHijos().get(0)), col);
+                break;
                     
                 case accion.SELECT_ALL:
                     if(nodo.getHijos().get(1).getHijos().isEmpty())
@@ -173,7 +205,7 @@ public class Compilador
                         message += ManejadorArchivos.ejecutarOperacion(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getHijos().get(0).getHijos().get(0).getValor(), o1);
                     }
                     else
-                        message += resolver(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getHijos().get(0)).toString();
+                        message += resolver(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getHijos().get(0));
                 break;
             }
             for(int i = 0; i < nodo.getHijos().size(); i++)

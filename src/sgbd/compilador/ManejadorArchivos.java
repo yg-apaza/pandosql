@@ -181,9 +181,9 @@ public class ManejadorArchivos
         return Tabla.seleccion(aux, col1, d1);
     }
 
-    public static String selectAll(String bd, String tabla)
+    public static Tabla selectAll(String bd, String tabla)
     {
-        return Tabla.cargar(getFileName(bd, tabla)).toString();
+        return Tabla.cargar(getFileName(bd, tabla));
     }
 
     static void deleteRegister(String bd, String tabla, String col, Object o1)
