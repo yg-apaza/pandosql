@@ -7,7 +7,7 @@ public class Util
 {
     public static boolean existeBD(String bd)
     {
-        return Tabla.seleccion(Tabla.cargar("manager_dbs.pd"), "nombreBD", bd).numFilas() != 0;
+        return Tabla.seleccion(Tabla.cargar("1.pd"), "nombreBD", bd).numFilas() != 0;
     }
     
     /**
@@ -18,8 +18,8 @@ public class Util
      */
     public static boolean existeTabla(String bd, String tabla)
     {
-        return Tabla.interseccion(  Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreBD", bd),
-                                    Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreTB", tabla)).numFilas() != 0;
+        return Tabla.interseccion(  Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", bd),
+                                    Tabla.seleccion(Tabla.cargar("2.pd"), "nombreTB", tabla)).numFilas() != 0;
     }
     
     /**
@@ -34,8 +34,8 @@ public class Util
         ArrayList<String> f = new ArrayList<>();
         f.add("archivo");
         String tabla_file = (String)Tabla.proyeccion(
-                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreBD", bd),
-                                                            Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreTB", tabla)),
+                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", bd),
+                                                            Tabla.seleccion(Tabla.cargar("2.pd"), "nombreTB", tabla)),
                                         f
         ).getFilas().get(0).get(0);
         return Tabla.cargar(tabla_file).getColumnas().indexOf(campo) >= 0;
@@ -53,8 +53,8 @@ public class Util
         ArrayList<String> f = new ArrayList<>();
         f.add("archivo");
         String tabla_file = (String)Tabla.proyeccion(
-                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreBD", bd),
-                                                            Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreTB", tabla)),
+                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", bd),
+                                                            Tabla.seleccion(Tabla.cargar("2.pd"), "nombreTB", tabla)),
                                         f
         ).getFilas().get(0).get(0);
         
@@ -66,8 +66,8 @@ public class Util
         ArrayList<String> f = new ArrayList<>();
         f.add("archivo");
         String tabla_file = (String)Tabla.proyeccion(
-                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreBD", bd),
-                                                            Tabla.seleccion(Tabla.cargar("manager_tables.pd"), "nombreTB", tabla)),
+                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", bd),
+                                                            Tabla.seleccion(Tabla.cargar("2.pd"), "nombreTB", tabla)),
                                         f
         ).getFilas().get(0).get(0);
         

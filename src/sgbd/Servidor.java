@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java_cup.runtime.Symbol;
 import sgbd.lexico.Lexico;
 import sgbd.lexico.sym;
@@ -48,7 +49,7 @@ public class Servidor extends Thread
         }
         
         String data;
-        String actualBD = null;
+        AtomicReference<String> actualBD = new AtomicReference<>(null);
         
         while (true)
         {
@@ -66,8 +67,8 @@ public class Servidor extends Thread
                     /**
                      * Despedazar aqui
                      */
-                    ASemantico(data, out, actualBD);
-                    //Compilar(data, out, actualBD);
+                    //ASemantico(data, out, actualBD);
+                    Compilar(data, out, actualBD);
                 }
             }
             catch (IOException e)
@@ -344,7 +345,7 @@ public class Servidor extends Thread
         }
     }
    
-    public void Compilar(String linea, ObjectOutputStream out, String actualBD) throws IOException, SocketException
+    public void Compilar(String linea, ObjectOutputStream out, AtomicReference<String> actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
         message = "";
@@ -359,15 +360,15 @@ public class Servidor extends Thread
                 if(eSintactico.isEmpty())
                 {
                     Nodo raiz = p.getRaiz();
-                    AST ast = new AST(raiz, errores, actualBD);
+                    AST ast = new AST(raiz, errores, actualBD.get());
                     ast.verificar();
                     ArrayList<String> eSemantico = errores.getError(2);
-                    ArrayList<String> wSemantico = errores.getError(3);
                     if(eSemantico.isEmpty())
                     {
                         /* COMPILADOR */
-                        Compilador comp = new Compilador(ast, actualBD);
-                        comp.compilar();
+                        Compilador comp = new Compilador(ast);
+                        comp.compilar(actualBD);
+                        System.out.println(actualBD);
                     }
                     else
                     {
