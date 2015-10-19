@@ -185,4 +185,15 @@ public class ManejadorArchivos
     {
         return Tabla.cargar(getFileName(bd, tabla)).toString();
     }
+
+    static void deleteRegister(String bd, String tabla, String col, Object o1)
+    {
+        String file = getFileName(bd, tabla);
+        Tabla aux = Tabla.cargar(file);
+        ArrayList<ArrayList<Object>> filas = Tabla.seleccion(aux, col, o1).getFilas();
+        
+        for (ArrayList<Object> fila : filas)
+            aux.getFilas().remove(fila);
+        Tabla.guardar(aux, file);
+    }
 }

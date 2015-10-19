@@ -33,6 +33,8 @@ public class Compilador
     {
         if(!nodo.esTerminal())
         {
+            Object o1 = null;
+            Nodo n1 = null;
             switch(nodo.getCodigo())
             {
                 case accion.USE_DATABASE:
@@ -121,13 +123,37 @@ public class Compilador
                     ManejadorArchivos.insertRegister(actualBD.get(), nodo.getHijos().get(0).getValor(), fil);
                 break;
                     
+                case accion.DELETE_REGISTER:
+                    n1 = nodo.getHijos().get(2);
+                    switch(n1.getCodigo())
+                    {
+                        case sym.numero:
+                            o1 = Integer.valueOf(n1.getValor());
+                        break;
+                        case sym.numreal:
+                            o1 = Double.valueOf(n1.getValor());
+                        break;
+                        case sym.cadena:
+                            o1 = n1.getValor().substring(1, n1.getValor().length() - 1);
+                        break;
+                        case sym.tr:
+                        case sym.fa:
+                            o1 = Boolean.valueOf(n1.getValor());
+                        break;
+                    }
+                    ManejadorArchivos.deleteRegister(   actualBD.get(), nodo.getHijos().get(0).getValor(),
+                                                        nodo.getHijos().get(1).getValor(),
+                                                        o1
+                                                    );
+                break;
+                    
                 case accion.SELECT_ALL:
                     if(nodo.getHijos().get(1).getHijos().isEmpty())
                         message += ManejadorArchivos.selectAll(actualBD.get(), nodo.getHijos().get(0).getValor());
                     else if(nodo.getHijos().get(1).getHijos().size() == 1)
                     {
-                        Object o1 = null;
-                        Nodo n1 = nodo.getHijos().get(1).getHijos().get(0).getHijos().get(1);
+                        
+                        n1 = nodo.getHijos().get(1).getHijos().get(0).getHijos().get(1);
                         switch(n1.getCodigo())
                         {
                             case sym.numero:
