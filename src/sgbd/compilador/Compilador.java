@@ -187,7 +187,7 @@ public class Compilador
                             break;
                             case sym.tr:
                             case sym.fa:
-                                oc = Boolean.valueOf(n1.getValor());
+                                oc = Boolean.valueOf(nc.getValor());
                             break;
                         }
                         ManejadorArchivos.updateRegister(   actualBD.get(), nodo.getHijos().get(0).getValor(),
