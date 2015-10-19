@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ManejadorArchivos
 {
@@ -126,5 +128,20 @@ public class ManejadorArchivos
         tbs.getFilas().remove(fil);
 
         Tabla.guardar(tbs, "2.pd");
+    }
+
+    static void showDatabases(String actualBD, ObjectOutputStream out)
+    {
+        try
+        {
+            ArrayList<String> col = new ArrayList<>();
+            col.add("nombreTB");
+            Tabla tbs = Tabla.proyeccion(Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", actualBD), col);
+            out.writeUTF(tbs.toString());
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
     }
 }

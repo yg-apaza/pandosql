@@ -80,6 +80,14 @@ public class Compilador
                 case accion.DROP_TABLE:
                     ManejadorArchivos.dropTable(actualBD.get(), nodo.getHijos().get(0).getValor());
                 break;
+                    
+                case accion.SHOW_TABLES:
+                    ManejadorArchivos.showDatabases(actualBD.get(), out);
+                break;
+                    
+                case accion.INSERT_REGISTER:
+                    //ManejadorArchivos.insertRegister(actualBD.get(), )
+                break;
             }
             for(int i = 0; i < nodo.getHijos().size(); i++)
                 compilar(nodo.getHijos().get(i), actualBD, out);

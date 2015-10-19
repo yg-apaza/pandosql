@@ -296,9 +296,9 @@ public class Servidor extends Thread
                 if(eSintactico.isEmpty())
                 {
                     Nodo raiz = p.getRaiz();
-                    AST ast = new AST(raiz, errores, actualBD.get());
+                    AST ast = new AST(raiz, errores);
                     
-                    ast.verificar();
+                    ast.verificar(actualBD);
                     
                     ArrayList<String> eSemantico = errores.getError(2);
                     for (String eSemantico1 : eSemantico)
@@ -357,8 +357,8 @@ public class Servidor extends Thread
                 if(eSintactico.isEmpty())
                 {
                     Nodo raiz = p.getRaiz();
-                    AST ast = new AST(raiz, errores, actualBD.get());
-                    ast.verificar();
+                    AST ast = new AST(raiz, errores);
+                    ast.verificar(actualBD);
                     ArrayList<String> eSemantico = errores.getError(2);
                     if(eSemantico.isEmpty())
                     {

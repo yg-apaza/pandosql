@@ -1,6 +1,7 @@
 package sgbd.semantico;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import sgbd.Mistake;
 import sgbd.lexico.sym;
 
@@ -8,24 +9,22 @@ public class AST
 {
     private Nodo raiz;
     private Mistake errores;
-    private String actualBD;
     
-    public AST(Nodo raiz, Mistake errores, String actualBD)
+    public AST(Nodo raiz, Mistake errores)
     {
         this.raiz = raiz;
         this.errores = errores;
-        this.actualBD = actualBD;
     }
     
-    public void verificar()
+    public void verificar(AtomicReference<String> actualBD)
     {
-        verificar(raiz);
+        verificar(raiz, actualBD);
     }
     
     /**
      * Analizador Semantico
     */
-    private void verificar(Nodo nodo)
+    private void verificar(Nodo nodo, AtomicReference<String> actualBD)
     {
         if(!nodo.esTerminal())
         {
@@ -47,36 +46,36 @@ public class AST
                 break;
                     
                 case accion.CREATE_TABLE:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
-                    else if(Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
                     
                 case accion.DROP_TABLE:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
-                    else if(!Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
                     
                 case accion.DELETE_TABLE:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
-                    else if(!Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
                     
                 case accion.SHOW_TABLES:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getLinea()+1), String.valueOf(nodo.getColumna())}));
                 break;
                     
                 case accion.INSERT_REGISTER:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getLinea()+1), String.valueOf(nodo.getColumna())}));
-                    else if(!Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                     else
                     {
                         ArrayList<Integer> tipos = new ArrayList<>();
@@ -100,17 +99,17 @@ public class AST
                                 break;
                             }
                         }
-                        if(!Util.comprobarTodosArgumentos(actualBD, nodo.getHijos().get(0).getValor(), tipos))
+                        if(!Util.comprobarTodosArgumentos(actualBD.get(), nodo.getHijos().get(0).getValor(), tipos))
                             errores.insertarError(Mistake.SEMANTICO, Mistake.ARGUMENTOS_NO_COINCIDEN, (new String[] {nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(1).getLinea()+1),String.valueOf(nodo.getHijos().get(1).getColumna())}));
                     }
                 break;
                     
                 case accion.DELETE_REGISTER:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getLinea()+1), String.valueOf(nodo.getColumna())}));
-                    else if(!Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
-                    else if(!Util.existeCampo(actualBD, nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor()))
+                    else if(!Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeCampo(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor()))
                         errores.insertarError(Mistake.SEMANTICO, Mistake.CAMPO_NO_EXISTE, (new String[] {nodo.getHijos().get(1).getValor(), nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                     else
                     {
@@ -131,17 +130,17 @@ public class AST
                                     t = 3;
                                 break;
                         }
-                        if(!Util.comprobarArgumento(actualBD, nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor(), t))
+                        if(!Util.comprobarArgumento(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor(), t))
                             errores.insertarError(Mistake.SEMANTICO, Mistake.ARGUMENTO_NO_COINCIDE, (new String[] {nodo.getHijos().get(2).getValor(), nodo.getHijos().get(1).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                     }
                 break;
                     
                 case accion.UPDATE_REGISTER:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getLinea()+1), String.valueOf(nodo.getColumna())}));
-                    else if(!Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
-                    else if(!Util.existeCampo(actualBD, nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor()))
+                    else if(!Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeCampo(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor()))
                         errores.insertarError(Mistake.SEMANTICO, Mistake.CAMPO_NO_EXISTE, (new String[] {nodo.getHijos().get(1).getValor(), nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                     else
                     {
@@ -162,44 +161,44 @@ public class AST
                                     t = 3;
                                 break;
                         }
-                        if(!Util.comprobarArgumento(actualBD, nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor(), t))
+                        if(!Util.comprobarArgumento(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor(), t))
                             errores.insertarError(Mistake.SEMANTICO, Mistake.ARGUMENTO_NO_COINCIDE, (new String[] {nodo.getHijos().get(2).getValor(), nodo.getHijos().get(1).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                         else
-                            verificarCondiciones(nodo.getHijos().get(3), nodo.getHijos().get(0).getValor());
+                            verificarCondiciones(nodo.getHijos().get(3), nodo.getHijos().get(0).getValor(), actualBD);
                     }
                 break;
                     
                 case accion.SELECT:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getLinea()+1), String.valueOf(nodo.getColumna())}));
-                    else if(!Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                     else
                     {
                         ArrayList<Nodo> cols = nodo.getHijos().get(1).getHijos();
                         for(Nodo c: cols)
-                            if(!Util.existeCampo(actualBD, nodo.getHijos().get(0).getValor(), c.getValor()))
+                            if(!Util.existeCampo(actualBD.get(), nodo.getHijos().get(0).getValor(), c.getValor()))
                                 errores.insertarError(Mistake.SEMANTICO, Mistake.CAMPO_NO_EXISTE, (new String[] {c.getValor(), nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
-                        verificarCondiciones(nodo.getHijos().get(2), nodo.getHijos().get(0).getValor());
+                        verificarCondiciones(nodo.getHijos().get(2), nodo.getHijos().get(0).getValor(), actualBD);
                     }
                 break;
                     
                 case accion.SELECT_ALL:
-                    if(actualBD == null)
+                    if(actualBD.get() == null)
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_SELECCIONADA, (new String[] {String.valueOf(nodo.getLinea()+1), String.valueOf(nodo.getColumna())}));
-                    else if(!Util.existeTabla(actualBD, nodo.getHijos().get(0).getValor()))
-                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD, String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
+                    else if(!Util.existeTabla(actualBD.get(), nodo.getHijos().get(0).getValor()))
+                        errores.insertarError(Mistake.SEMANTICO, Mistake.TABLA_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), actualBD.get(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                     else
-                        verificarCondiciones(nodo.getHijos().get(1), nodo.getHijos().get(0).getValor());
+                        verificarCondiciones(nodo.getHijos().get(1), nodo.getHijos().get(0).getValor(), actualBD);
                 break;
             }
             
             for(int i = 0; i < nodo.getHijos().size(); i++)
-                    verificar(nodo.getHijos().get(i));
+                    verificar(nodo.getHijos().get(i), actualBD);
         }
     }
     
-    private void verificarCondiciones(Nodo nodo, String tabla)
+    private void verificarCondiciones(Nodo nodo, String tabla, AtomicReference<String> actualBD)
     {
         if(!nodo.esTerminal())
         {
@@ -223,12 +222,12 @@ public class AST
                             t = 3;
                         break;
                     }
-                    if(!Util.comprobarArgumento(actualBD, tabla, nodo.getHijos().get(0).getValor(), t))
+                    if(!Util.comprobarArgumento(actualBD.get(), tabla, nodo.getHijos().get(0).getValor(), t))
                         errores.insertarError(Mistake.SEMANTICO, Mistake.ARGUMENTO_NO_COINCIDE, (new String[] {nodo.getHijos().get(1).getValor(), nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
             }
             for(int i = 0; i < nodo.getHijos().size(); i++)
-                    verificarCondiciones(nodo.getHijos().get(i), tabla);
+                    verificarCondiciones(nodo.getHijos().get(i), tabla, actualBD);
         }
     }
     
