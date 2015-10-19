@@ -1,28 +1,36 @@
 package sgbd.compilador;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.File;
+import java.util.ArrayList;
 
 public class ManejadorArchivos
 {
     public static void crearBD(String bd)
     {
-        ObjectOutputStream archivo = null;
+        Tabla t = Tabla.cargar("manager_dbs.pd");
+        ArrayList<Object> data = new ArrayList<>();
+        data.add(bd);
+        t.addFila(data);
+        Tabla.guardar(t, "manager_dbs.pd");
+    }
+
+    public static void dropBD(String bd)
+    {
+        Tabla dbs = Tabla.cargar("manager_dbs.pd");
+        ArrayList<Object> bdr = new ArrayList<>();
+        bdr.add(bd);
+        dbs.getFilas().remove(bdr);
+        Tabla.guardar(dbs, "manager_dbs.pd");
         
-        try
+        Tabla tbs = Tabla.cargar("manager_tables.pd");
+        Tabla aux = Tabla.seleccion(tbs, "nombreBD", bd);
+        for(int i = 0; i < aux.getFilas().size(); i++)
         {
-            archivo = new ObjectOutputStream(new FileOutputStream("pd_files/manager_dbs.pd", true));
-            archivo.writeObject(bd);
+            String name = (String)aux.getFilas().get(i).get(2);
+            File file = new File("pd_files/" + name);
+            file.delete();
+            tbs.getFilas().remove(aux.getFilas().get(i));
         }
-        catch (FileNotFoundException ex)
-        {
-            ex.printStackTrace();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
+        Tabla.guardar(tbs, "manager_dbs.pd");
     }
 }

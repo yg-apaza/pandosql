@@ -33,6 +33,10 @@ public class Compilador
                 case accion.CREATE_DATABASE:
                     ManejadorArchivos.crearBD(nodo.getHijos().get(0).getValor());
                 break;
+                    
+                case accion.DROP_DATABASE:
+                    ManejadorArchivos.dropBD(nodo.getHijos().get(0).getValor());
+                break;
             }
             for(int i = 0; i < nodo.getHijos().size(); i++)
                 compilar(nodo.getHijos().get(i));

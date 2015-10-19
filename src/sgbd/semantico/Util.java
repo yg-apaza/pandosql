@@ -61,7 +61,7 @@ public class Util
         return Tabla.cargar(tabla_file).getTipos().equals(tipos);
     }
 
-    static boolean comprobarArgumento(String bd, String tabla, String campo, int t)
+    public static boolean comprobarArgumento(String bd, String tabla, String campo, int t)
     {
         ArrayList<String> f = new ArrayList<>();
         f.add("archivo");
