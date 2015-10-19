@@ -149,17 +149,17 @@ public class AST
                         {
                             case sym.numero:
                                     t = 0;
-                                    break;
-                                case sym.numreal:
-                                    t = 1;
-                                    break;
-                                case sym.cadena:
-                                    t = 2;
-                                    break;
-                                case sym.tr:
-                                case sym.fa:
-                                    t = 3;
                                 break;
+                            case sym.numreal:
+                                t = 1;
+                                break;
+                            case sym.cadena:
+                                t = 2;
+                                break;
+                            case sym.tr:
+                            case sym.fa:
+                                t = 3;
+                            break;
                         }
                         if(!Util.comprobarArgumento(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(1).getValor(), t))
                             errores.insertarError(Mistake.SEMANTICO, Mistake.ARGUMENTO_NO_COINCIDE, (new String[] {nodo.getHijos().get(2).getValor(), nodo.getHijos().get(1).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));

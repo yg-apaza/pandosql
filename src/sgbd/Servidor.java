@@ -364,7 +364,8 @@ public class Servidor extends Thread
                     {
                         /* COMPILADOR */
                         Compilador comp = new Compilador(ast);
-                        comp.compilar(actualBD, out);
+                        comp.compilar(actualBD);
+                        message += comp.getMessage();
                     }
                     else
                     {

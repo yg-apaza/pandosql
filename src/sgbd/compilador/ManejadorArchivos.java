@@ -96,22 +96,10 @@ public class ManejadorArchivos
         
         return (max + 1) + ".pd";
     }
-    
-    /**
-     * Salida out
-     * @param out
-     */
-    public static void showDatabases(ObjectOutputStream out)
+
+    public static String showDatabases()
     {
-        try
-        {
-            Tabla dbs = Tabla.cargar("1.pd");
-            out.writeUTF(dbs.toString());
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
+        return Tabla.cargar("1.pd").toString();
     }
     
     public static void dropTable(String bd, String tabla)
@@ -127,20 +115,20 @@ public class ManejadorArchivos
 
         Tabla.guardar(tbs, "2.pd");
     }
-
-    public static void showDatabases(String actualBD, ObjectOutputStream out)
+    
+    public static void deleteTable(String bd, String tabla)
     {
-        try
-        {
-            ArrayList<String> col = new ArrayList<>();
-            col.add("nombreTB");
-            Tabla tbs = Tabla.proyeccion(Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", actualBD), col);
-            out.writeUTF(tbs.toString());
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
+        String file = getFileName(bd, tabla);
+        Tabla aux = Tabla.cargar(file);
+        aux.getFilas().clear();
+        Tabla.guardar(aux, file);
+    }
+
+    public static String showTables(String actualBD)
+    {
+        ArrayList<String> col = new ArrayList<>();
+        col.add("nombreTB");
+        return Tabla.proyeccion(Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", actualBD), col).toString();
     }
 
     public static void insertRegister(String bd, String tabla, ArrayList<Object> fil)
@@ -160,5 +148,41 @@ public class ManejadorArchivos
                                                             Tabla.seleccion(Tabla.cargar("2.pd"), "nombreTB", tabla)),
                                         f
         ).getFilas().get(0).get(0);
+    }
+    
+    /**
+     * 
+     * @param bd
+     * @param tabla
+     * @param col1
+     * @param d1
+     * @param col2
+     * @param d2
+     * @param op 0 OR, 1 AND
+     * @return 
+     */
+    public static Tabla ejecutarOperacion(String bd, String tabla, String col1, Object d1, String col2, Object d2, int op)
+    {
+        Tabla aux = Tabla.cargar(getFileName(bd, tabla));
+        switch(op)
+        {
+            case 0:
+                return Tabla.union(Tabla.seleccion(aux, col1, d1), Tabla.seleccion(aux, col2, d2));
+                
+            case 1:
+                return Tabla.interseccion(Tabla.seleccion(aux, col1, d1), Tabla.seleccion(aux, col2, d2));
+        }
+        return null;
+    }
+    
+    public static Tabla ejecutarOperacion(String bd, String tabla, String col1, Object d1)
+    {
+        Tabla aux = Tabla.cargar(getFileName(bd, tabla));
+        return Tabla.seleccion(aux, col1, d1);
+    }
+
+    public static String selectAll(String bd, String tabla)
+    {
+        return Tabla.cargar(getFileName(bd, tabla)).toString();
     }
 }
