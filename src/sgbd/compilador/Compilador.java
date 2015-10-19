@@ -37,6 +37,8 @@ public class Compilador
                     
                 case accion.DROP_DATABASE:
                     ManejadorArchivos.dropBD(nodo.getHijos().get(0).getValor());
+                    if(actualBD.get().equals(nodo.getHijos().get(0).getValor()))
+                        actualBD.set(null);
                 break;
                     
                 case accion.CREATE_TABLE:

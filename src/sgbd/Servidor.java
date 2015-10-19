@@ -64,9 +64,6 @@ public class Servidor extends Thread
                 }
                 else
                 {
-                    /**
-                     * Despedazar aqui
-                     */
                     //ASemantico(data, out, actualBD);
                     Compilar(data, out, actualBD);
                 }
@@ -368,7 +365,6 @@ public class Servidor extends Thread
                         /* COMPILADOR */
                         Compilador comp = new Compilador(ast);
                         comp.compilar(actualBD);
-                        System.out.println(actualBD);
                     }
                     else
                     {

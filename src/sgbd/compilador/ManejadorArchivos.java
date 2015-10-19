@@ -22,23 +22,22 @@ public class ManejadorArchivos
 
     public static void dropBD(String bd)
     {
-        Tabla dbs = Tabla.cargar("1.pd");
-        ArrayList<Object> bdr = new ArrayList<>();
-        bdr.add(bd);
-        dbs.getFilas().remove(bdr);
-        Tabla.guardar(dbs, "1.pd");
-        
         Tabla tbs = Tabla.cargar("2.pd");
         Tabla aux = Tabla.seleccion(tbs, "nombreBD", bd);
         for(int i = 0; i < aux.getFilas().size(); i++)
         {
             String name = (String)aux.getFilas().get(i).get(2);
-            System.out.println("Borrando tabla " + name + " ...");
             File file = new File("pd_files/" + name);
             file.delete();
             tbs.getFilas().remove(aux.getFilas().get(i));
         }
         Tabla.guardar(tbs, "2.pd");
+        
+        Tabla dbs = Tabla.cargar("1.pd");
+        ArrayList<Object> bdr = new ArrayList<>();
+        bdr.add(bd);
+        dbs.getFilas().remove(bdr);
+        Tabla.guardar(dbs, "1.pd");
     }
     
     public static void crearTabla(String bd, String tabla, ArrayList<Integer> tipos, ArrayList<String> cols)
@@ -50,6 +49,7 @@ public class ManejadorArchivos
         newFil.add(tabla);
         newFil.add(archivo);
         tbs.addFila(newFil);
+        Tabla.guardar(tbs, "2.pd");
         
         Tabla newTabla = new Tabla();
         newTabla.setColumnas(cols);

@@ -181,7 +181,7 @@ public class Tabla implements Serializable
     public static Tabla seleccion(Tabla t, String columna, Object data)
     {
         /*
-            Implementación Yuliana
+            //Implementación Yuliana
             Tabla t2 = t;
             ArrayList<ArrayList<Object>> datos = new ArrayList<>();
             for(int i = 0; i < t.numFilas(); i++)
@@ -192,6 +192,7 @@ public class Tabla implements Serializable
         */
         
         /* Implementación Kevin */
+        
         Tabla resultado = new Tabla();
         resultado.setColumnas(t.columnas);
         resultado.setTipos(t.tipos);
@@ -203,6 +204,7 @@ public class Tabla implements Serializable
         });
                 
         return resultado;
+        
     }
     
     private static int getTipo(Tabla t, String columna)

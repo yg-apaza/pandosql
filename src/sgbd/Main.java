@@ -14,7 +14,6 @@ public class Main
 
     public static void main(String args[])
     {
-        
         ServerSocket serverSocket = null;
         Socket socket = null;
 
@@ -95,6 +94,6 @@ public class Main
         t.setColumnas(col);
         
         Tabla.guardar(t, "2.pd");
-                */
+        */
     }
 }
