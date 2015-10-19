@@ -14,7 +14,7 @@ public class Main
 
     public static void main(String args[])
     {
-        /*
+        
         ServerSocket serverSocket = null;
         Socket socket = null;
 
@@ -40,12 +40,13 @@ public class Main
             }
             new Servidor(socket).start();
         }
-        */
-        //System.out.println(ManejadorArchivos.getNombreArchivoTabla());
         
+        //System.out.println(ManejadorArchivos.getNombreArchivoTabla());
+        /*
         
         Tabla t = Tabla.cargar("4.pd");
         System.out.println(t.getFilas().get(0));
+        */
         
         /**
          * Crear Tabla de Base de Datos
