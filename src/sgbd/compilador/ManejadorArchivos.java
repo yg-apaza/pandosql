@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ManejadorArchivos
 {
@@ -130,7 +128,7 @@ public class ManejadorArchivos
         Tabla.guardar(tbs, "2.pd");
     }
 
-    static void showDatabases(String actualBD, ObjectOutputStream out)
+    public static void showDatabases(String actualBD, ObjectOutputStream out)
     {
         try
         {
@@ -143,5 +141,24 @@ public class ManejadorArchivos
         {
             ex.printStackTrace();
         }
+    }
+
+    public static void insertRegister(String bd, String tabla, ArrayList<Object> fil)
+    {
+        String file = getFileName(bd, tabla);
+        Tabla aux = Tabla.cargar(file);
+        aux.addFila(fil);
+        Tabla.guardar(aux, file);
+    }
+    
+    public static String getFileName(String bd, String tabla)
+    {
+        ArrayList<String> f = new ArrayList<>();
+        f.add("archivo");
+        return (String)Tabla.proyeccion(
+                                        Tabla.interseccion( Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", bd),
+                                                            Tabla.seleccion(Tabla.cargar("2.pd"), "nombreTB", tabla)),
+                                        f
+        ).getFilas().get(0).get(0);
     }
 }

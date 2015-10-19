@@ -14,6 +14,7 @@ public class Main
 
     public static void main(String args[])
     {
+        /*
         ServerSocket serverSocket = null;
         Socket socket = null;
 
@@ -39,13 +40,13 @@ public class Main
             }
             new Servidor(socket).start();
         }
-        
+        */
         //System.out.println(ManejadorArchivos.getNombreArchivoTabla());
         
-        /*
-        Tabla t = Tabla.cargar("2.pd");
-        System.out.println(t.getFilas().get(1));
-        */
+        
+        Tabla t = Tabla.cargar("4.pd");
+        System.out.println(t.getFilas().get(0));
+        
         /**
          * Crear Tabla de Base de Datos
          */
@@ -64,7 +65,7 @@ public class Main
         t.setColumnas(col);
         
         Tabla.guardar(t, "1.pd");
-                */
+               */
         /**
          * Crear tabla de Tablas
          */
@@ -91,6 +92,7 @@ public class Main
         ArrayList<String> col = new ArrayList<>();
         col.add("nombreBD");
         col.add("nombreTB");
+        col.add("archivo");
         t.setColumnas(col);
         
         Tabla.guardar(t, "2.pd");

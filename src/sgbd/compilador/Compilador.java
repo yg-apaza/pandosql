@@ -86,7 +86,28 @@ public class Compilador
                 break;
                     
                 case accion.INSERT_REGISTER:
-                    //ManejadorArchivos.insertRegister(actualBD.get(), )
+                    ArrayList<Object> fil = new ArrayList<>();
+                    ArrayList<Nodo> args = nodo.getHijos().get(1).getHijos();
+                    for (Nodo arg : args)
+                    {
+                        switch (arg.getCodigo())
+                        {
+                            case sym.numero:
+                                fil.add(Integer.valueOf(arg.getValor()));
+                                break;
+                            case sym.numreal:
+                                fil.add(Double.valueOf(arg.getValor()));
+                                break;
+                            case sym.cadena:
+                                fil.add(arg.getValor().substring(1, arg.getValor().length() - 1));
+                                break;
+                            case sym.tr:
+                            case sym.fa:
+                                fil.add(Boolean.valueOf(arg.getValor()));
+                            break;
+                        }
+                    }
+                    ManejadorArchivos.insertRegister(actualBD.get(), nodo.getHijos().get(0).getValor(), fil);
                 break;
             }
             for(int i = 0; i < nodo.getHijos().size(); i++)
