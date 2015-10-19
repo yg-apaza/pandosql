@@ -3,6 +3,8 @@ package sgbd;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import sgbd.semantico.Util;
+import sgbd.compilador.Tabla;
 
 public class Main
 {
@@ -35,5 +37,10 @@ public class Main
             }
             new Servidor(socket).start();
         }
+        /*
+        Tabla t = Tabla.cargar("manager_tables.pd");
+        System.out.println(t.getFilas().get(1));
+        System.out.println(Util.existeBD("BD_PANDOSQL"));
+                */
     }
 }

@@ -218,7 +218,7 @@ public class Tabla implements Serializable
     @Override
     public String toString()
     {
-        /*Bajo muchas conidicones coprobadas antes*/
+        /*Bajo muchas condicones comprobadas antes*/
         
         String resultado = "";
         for(int i = 0;i < columnas.size();i++) {

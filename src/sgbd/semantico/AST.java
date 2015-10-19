@@ -35,7 +35,7 @@ public class AST
                     if(!Util.existeBD(nodo.getHijos().get(0).getValor()))
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
                 break;
-                    
+                 
                 case accion.DROP_DATABASE:
                     if(!Util.existeBD(nodo.getHijos().get(0).getValor()))
                         errores.insertarError(Mistake.SEMANTICO, Mistake.BD_NO_EXISTE, (new String[] {nodo.getHijos().get(0).getValor(), String.valueOf(nodo.getHijos().get(0).getLinea()+1),String.valueOf(nodo.getHijos().get(0).getColumna())}));
