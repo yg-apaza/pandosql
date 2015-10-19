@@ -148,14 +148,14 @@ public class AST
                         switch(nodo.getHijos().get(2).getCodigo())
                         {
                             case sym.numero:
-                                    t = 0;
-                                break;
+                                t = 0;
+                            break;
                             case sym.numreal:
                                 t = 1;
-                                break;
+                            break;
                             case sym.cadena:
                                 t = 2;
-                                break;
+                            break;
                             case sym.tr:
                             case sym.fa:
                                 t = 3;

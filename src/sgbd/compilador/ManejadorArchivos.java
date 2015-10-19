@@ -196,4 +196,27 @@ public class ManejadorArchivos
             aux.getFilas().remove(fila);
         Tabla.guardar(aux, file);
     }
+
+    static void updateRegister(String bd, String tabla, String col, Object data)
+    {
+        String file = getFileName(bd, tabla);
+        Tabla aux = Tabla.cargar(file);
+        int indice = Tabla.getIndiceColumna(aux, col);
+        for (ArrayList<Object> fila : aux.getFilas())
+            fila.set(indice, data);
+        Tabla.guardar(aux, file);
+    }
+
+    static void updateRegister(String bd, String tabla, String col, Object data, Tabla t)
+    {
+        String file = getFileName(bd, tabla);
+        Tabla aux = Tabla.cargar(file);
+        int indice = Tabla.getIndiceColumna(aux, col);
+        for (ArrayList<Object> fila : aux.getFilas())
+        {
+            if(t.getFilas().contains(fila))
+                fila.set(indice, data);
+        }
+        Tabla.guardar(aux, file);
+    }
 }

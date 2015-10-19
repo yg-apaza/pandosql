@@ -35,6 +35,7 @@ public class Compilador
         {
             Object o1 = null;
             Nodo n1 = null;
+            ArrayList<String> col = null;
             switch(nodo.getCodigo())
             {
                 case accion.USE_DATABASE:
@@ -147,8 +148,64 @@ public class Compilador
                                                     );
                 break;
                 
+                case accion.UPDATE_REGISTER:
+                    n1 = nodo.getHijos().get(2);
+                    switch(n1.getCodigo())
+                    {
+                        case sym.numero:
+                            o1 = Integer.valueOf(n1.getValor());
+                        break;
+                        case sym.numreal:
+                            o1 = Double.valueOf(n1.getValor());
+                        break;
+                        case sym.cadena:
+                            o1 = n1.getValor().substring(1, n1.getValor().length() - 1);
+                        break;
+                        case sym.tr:
+                        case sym.fa:
+                            o1 = Boolean.valueOf(n1.getValor());
+                        break;
+                    }
+                    
+                    if(nodo.getHijos().get(3).getHijos().isEmpty())
+                        ManejadorArchivos.updateRegister(actualBD.get(), nodo.getHijos().get(0).getValor(),
+                                                    nodo.getHijos().get(1).getValor(), o1);
+                    else if(nodo.getHijos().get(3).getHijos().size() == 1)
+                    {
+                        Nodo nc = nodo.getHijos().get(3).getHijos().get(0).getHijos().get(1);
+                        Object oc = null;
+                        switch(nc.getCodigo())
+                        {
+                            case sym.numero:
+                                oc = Integer.valueOf(n1.getValor());
+                            break;
+                            case sym.numreal:
+                                oc = Double.valueOf(n1.getValor());
+                            break;
+                            case sym.cadena:
+                                oc = n1.getValor().substring(1, n1.getValor().length() - 1);
+                            break;
+                            case sym.tr:
+                            case sym.fa:
+                                oc = Boolean.valueOf(n1.getValor());
+                            break;
+                        }
+                        ManejadorArchivos.updateRegister(   actualBD.get(), nodo.getHijos().get(0).getValor(),
+                                                            nodo.getHijos().get(1).getValor(), o1,
+                                                            ManejadorArchivos.ejecutarOperacion(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(3).getHijos().get(0).getHijos().get(0).getValor(), oc)
+                                                        );
+                    }
+                    else
+                    {
+                        ManejadorArchivos.updateRegister(   actualBD.get(), nodo.getHijos().get(0).getValor(),
+                                                            nodo.getHijos().get(1).getValor(), o1,
+                                                            resolver(actualBD.get(), nodo.getHijos().get(0).getValor(), nodo.getHijos().get(3).getHijos().get(0))
+                                                        );
+                    }
+                break;
+                    
                 case accion.SELECT:
-                    ArrayList<String> col = new ArrayList<>();
+                    col = new ArrayList<>();
                     for(int i = 0; i < nodo.getHijos().get(1).getHijos().size(); i++)
                         col.add(nodo.getHijos().get(1).getHijos().get(i).getValor());
                     
