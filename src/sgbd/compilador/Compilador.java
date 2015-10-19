@@ -177,10 +177,10 @@ public class Compilador
                         switch(nc.getCodigo())
                         {
                             case sym.numero:
-                                oc = Integer.valueOf(n1.getValor());
+                                oc = Integer.valueOf(nc.getValor());
                             break;
                             case sym.numreal:
-                                oc = Double.valueOf(n1.getValor());
+                                oc = Double.valueOf(nc.getValor());
                             break;
                             case sym.cadena:
                                 oc = nc.getValor().substring(1, nc.getValor().length() - 1);
