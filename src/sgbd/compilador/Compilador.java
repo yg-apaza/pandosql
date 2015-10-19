@@ -183,7 +183,7 @@ public class Compilador
                                 oc = Double.valueOf(n1.getValor());
                             break;
                             case sym.cadena:
-                                oc = n1.getValor().substring(1, n1.getValor().length() - 1);
+                                oc = nc.getValor().substring(1, nc.getValor().length() - 1);
                             break;
                             case sym.tr:
                             case sym.fa:

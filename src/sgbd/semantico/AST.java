@@ -209,7 +209,7 @@ public class AST
                     switch(nodo.getHijos().get(1).getCodigo())
                     {
                         case sym.numero:
-                                t = 0;
+                            t = 0;
                         break;
                         case sym.numreal:
                             t = 1;

@@ -178,6 +178,7 @@ public class ManejadorArchivos
     public static Tabla ejecutarOperacion(String bd, String tabla, String col1, Object d1)
     {
         Tabla aux = Tabla.cargar(getFileName(bd, tabla));
+        System.out.println("objeto " + d1);
         return Tabla.seleccion(aux, col1, d1);
     }
 
@@ -212,6 +213,7 @@ public class ManejadorArchivos
         String file = getFileName(bd, tabla);
         Tabla aux = Tabla.cargar(file);
         int indice = Tabla.getIndiceColumna(aux, col);
+        System.out.println("size " + t.getFilas().size());
         for (ArrayList<Object> fila : aux.getFilas())
         {
             if(t.getFilas().contains(fila))
