@@ -278,7 +278,7 @@ public class Servidor extends Thread
         }
     }
    
-    public  void ASemantico(String linea, ObjectOutputStream out, String actualBD) throws IOException, SocketException
+    public  void ASemantico(String linea, ObjectOutputStream out, AtomicReference<String> actualBD) throws IOException, SocketException
     {
         errores = new Mistake();
         message = "";
@@ -296,7 +296,7 @@ public class Servidor extends Thread
                 if(eSintactico.isEmpty())
                 {
                     Nodo raiz = p.getRaiz();
-                    AST ast = new AST(raiz, errores, actualBD);
+                    AST ast = new AST(raiz, errores, actualBD.get());
                     
                     ast.verificar();
                     
@@ -364,7 +364,7 @@ public class Servidor extends Thread
                     {
                         /* COMPILADOR */
                         Compilador comp = new Compilador(ast);
-                        comp.compilar(actualBD);
+                        comp.compilar(actualBD, out);
                     }
                     else
                     {

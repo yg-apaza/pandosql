@@ -1,5 +1,6 @@
 package sgbd.compilador;
 
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import sgbd.lexico.sym;
@@ -16,12 +17,12 @@ public class Compilador
         this.arbol = arbol;
     }
     
-    public void compilar(AtomicReference<String> actualBD)
+    public void compilar(AtomicReference<String> actualBD, ObjectOutputStream out)
     {
-        compilar(arbol.getRaiz(), actualBD);
+        compilar(arbol.getRaiz(), actualBD, out);
     }
     
-    private void compilar(Nodo nodo, AtomicReference<String> actualBD)
+    private void compilar(Nodo nodo, AtomicReference<String> actualBD, ObjectOutputStream out)
     {
         if(!nodo.esTerminal())
         {
@@ -32,7 +33,7 @@ public class Compilador
                 break;
                     
                 case accion.CREATE_DATABASE:
-                    ManejadorArchivos.crearBD(nodo.getHijos().get(0).getValor());
+                    ManejadorArchivos.createBD(nodo.getHijos().get(0).getValor());
                 break;
                     
                 case accion.DROP_DATABASE:
@@ -69,11 +70,19 @@ public class Compilador
                         }
                         cols.add(n.getHijos().get(1).getValor());
                     }
-                    ManejadorArchivos.crearTabla(actualBD.get(), nodo.getHijos().get(0).getValor(), tipos, cols);
+                    ManejadorArchivos.createTable(actualBD.get(), nodo.getHijos().get(0).getValor(), tipos, cols);
+                break;
+                    
+                case accion.SHOW_DATABASES:
+                    ManejadorArchivos.showDatabases(out);
+                break;
+                    
+                case accion.DROP_TABLE:
+                    ManejadorArchivos.dropTable(actualBD.get(), nodo.getHijos().get(0).getValor());
                 break;
             }
             for(int i = 0; i < nodo.getHijos().size(); i++)
-                compilar(nodo.getHijos().get(i), actualBD);
+                compilar(nodo.getHijos().get(i), actualBD, out);
         }
     }
 }

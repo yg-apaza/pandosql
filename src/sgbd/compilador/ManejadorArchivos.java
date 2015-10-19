@@ -6,12 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ManejadorArchivos
 {
-    public static void crearBD(String bd)
+    public static void createBD(String bd)
     {
         Tabla t = Tabla.cargar("1.pd");
         ArrayList<Object> data = new ArrayList<>();
@@ -40,7 +38,7 @@ public class ManejadorArchivos
         Tabla.guardar(dbs, "1.pd");
     }
     
-    public static void crearTabla(String bd, String tabla, ArrayList<Integer> tipos, ArrayList<String> cols)
+    public static void createTable(String bd, String tabla, ArrayList<Integer> tipos, ArrayList<String> cols)
     {
         String archivo = getNombreArchivoTabla();
         Tabla tbs = Tabla.cargar("2.pd");
@@ -97,5 +95,36 @@ public class ManejadorArchivos
         }
         
         return (max + 1) + ".pd";
+    }
+    
+    /**
+     * Salida out
+     * @param out
+     */
+    public static void showDatabases(ObjectOutputStream out)
+    {
+        try
+        {
+            Tabla dbs = Tabla.cargar("1.pd");
+            out.writeUTF(dbs.toString());
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+    
+    public static void dropTable(String bd, String tabla)
+    {
+        ArrayList<Object> fil = Tabla.interseccion( Tabla.seleccion(Tabla.cargar("2.pd"), "nombreBD", bd),
+                                Tabla.seleccion(Tabla.cargar("2.pd"), "nombreTB", tabla)).getFilas().get(0);
+        Tabla tbs = Tabla.cargar("2.pd");
+        
+        String name = (String)fil.get(2);
+        File file = new File("pd_files/" + name);
+        file.delete();
+        tbs.getFilas().remove(fil);
+
+        Tabla.guardar(tbs, "2.pd");
     }
 }
